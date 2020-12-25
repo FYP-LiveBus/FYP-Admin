@@ -78,8 +78,8 @@ const Results = ({ className, subadmins, ...rest }) => {
     alert(id)
     axios.delete(`https://livebusapi.herokuapp.com/api/users/${id}`)
      .then(response => {
-       alert("Sub Admin deleted successfully")
        console.log(response.data)
+       alert("Sub Admin deleted successfully")
      })
      .catch(err => {
        alert(err)
@@ -165,7 +165,7 @@ const Results = ({ className, subadmins, ...rest }) => {
                     {subadmin.email}
                   </TableCell>
                   <TableCell>
-                    {subadmin.phone}
+                    {subadmin.phonenumber}
                   </TableCell>
                   <TableCell>
                     {/* {moment(admin.createdAt).format('DD/MM/YYYY')} */}

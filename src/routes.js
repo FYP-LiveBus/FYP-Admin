@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useSelector } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
@@ -22,46 +22,41 @@ import NotificationListView from './views/ListView/NotificationListView';
 import ProtectedRoute from 'src/components/ProtectedRoute'
 
 export default function Routes() {
-  // Declare a new state variable, which we'll call "count"
-  
   
   const state = useSelector(s => s)
   // console.log(state)
-
-  const  routes = [
-        {
-          path: '/',
-          children: [
-            { path: 'login', element: <LoginView /> },
-            { path: '404', element: <NotFoundView /> },
-            { path: '/', element: <Navigate to="login" /> },
-            { path: '*', element: <Navigate to="/404" /> }
-          ]
-        },
-        {
-          path: 'app',
-          element: <ProtectedRoute component={DashboardLayout} login={state.isLoggedIn}/>,
-          children: [
-            { path: 'account', element: <AccountView /> },
-            { path: 'students', element: <StudentListView /> },
-            { path: 'drivers', element: <DriverListView /> },
-            { path: 'conductors', element: <ConductorListView /> },
-            { path: 'buses', element: <BusListView /> },
-            { path: 'routes', element: <RouteListView /> },
-            { path: 'stops', element: <StopListView /> },
-            { path: 'subadmins', element: <SubAdminListView /> },
-            { path: 'admins', element: <AdminListView /> },
-            { path: 'dashboard', element: <DashboardView />},
-            { path: 'trips', element: <TripListView /> },
-            { path: 'notifications', element: <NotificationListView /> },
-            { path: 'feedbacks', element: <FeedBackListView /> },
-            { path: 'products', element: <ProductListView /> },
-            { path: 'settings', element: <SettingsView /> },
-            { path: '*', element: <Navigate to="/404" /> }
-          ]
-        }
-      ];
-      
-      return routes
-
+  const routes = [
+    {
+      path: '/',
+      children: [
+        { path: 'login', element: <LoginView /> },
+        { path: '404', element: <NotFoundView /> },
+        { path: '/', element: <Navigate to="login" /> },
+        { path: '*', element: <Navigate to="/404" /> }
+        ]
+    },
+    {
+      path: 'app',
+      element: <ProtectedRoute component={DashboardLayout} login={state.isLoggedIn}/>,
+      children: [
+        { path: 'account', element: <AccountView /> },
+        { path: 'students', element: <StudentListView /> },
+        { path: 'drivers', element: <DriverListView /> },
+        { path: 'conductors', element: <ConductorListView /> },
+        { path: 'buses', element: <BusListView /> },
+        { path: 'routes', element: <RouteListView /> },
+        { path: 'stops', element: <StopListView /> },
+        { path: 'subadmins', element: <SubAdminListView /> },
+        { path: 'admins', element: <AdminListView /> },
+        { path: 'dashboard', element: <DashboardView />},
+        { path: 'trips', element: <TripListView /> },
+        { path: 'notifications', element: <NotificationListView /> },
+        { path: 'feedbacks', element: <FeedBackListView /> },
+        { path: 'products', element: <ProductListView /> },
+        { path: 'settings', element: <SettingsView /> },
+        { path: '*', element: <Navigate to="/404" /> }
+      ]
+    }
+  ];
+  return routes
 }

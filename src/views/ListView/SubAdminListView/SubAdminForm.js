@@ -12,8 +12,15 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
+import axios from 'axios';
+import {useDispatch} from 'react-redux'
+import {addSubAdmin} from 'src/Redux/actions'
 
-const states = [
+const cities = [
+  {
+    value: '',
+    label: ''
+  },
   {
     value: 'Lahore',
     label: 'Lahore'
@@ -35,15 +42,14 @@ const useStyles = makeStyles(() => ({
 const SubAdminForm = ({ className, closeModal, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     username: '',
+    password: '',
     email: '',
-    phone: '',
-    // age: '',
-    // dateOfBirth: '',
-    // city: '',
-    profilePicture: ''
+    phonenumber: '',
+    city: '',
+    // profilePicture: ''
   });
 
   const handleChange = event => {
@@ -52,6 +58,34 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+
+  const dispatch = useDispatch()
+
+  const saveHandler = () => {
+    axios.post("https://livebusapi.herokuapp.com/api/users/register-subadmin",
+    {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      username: values.username,
+      password: values.password,  
+      email: values.email,
+      phonenumber: values.phonenumber,
+      city: values.city,
+    })
+      .then(response=>{
+        let user = response.data
+        // alert(response.data);
+        console.log(response.data)
+        dispatch(addSubAdmin(user));
+        alert("SubAdmin saved successfully");
+      })
+      .catch(err=>{
+        alert(err)
+      })
+      closeModal()
+      
+  }
+
 
   return (
     <form
@@ -69,10 +103,10 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="First name"
-                name="firstName"
+                name="firstname"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.firstname}
                 variant="outlined"
               />
             </Grid>
@@ -80,10 +114,10 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Last name"
-                name="lastName"
+                name="lastname"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.lastname}
                 variant="outlined"
               />
             </Grid>
@@ -101,10 +135,21 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                required
+                value={values.password}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
                 label="Email"
                 name="email"
                 onChange={handleChange}
-                value={values.age}
+                value={values.email}
                 variant="outlined"
               />
             </Grid>
@@ -112,30 +157,19 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Phone Number"
-                name="phone"
+                name="phonenumber"
                 onChange={handleChange}
                 type="number"
                 required
-                value={values.phone}
+                value={values.phonenumber}
                 variant="outlined"
               />
             </Grid>
-            {/* <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                name="dob"
-                onChange={handleChange}
-                type="date"
-                value={values.dateOfBirth}
-                variant="outlined"
-              /> 
-            </Grid>*/}
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
                 label="Select City"
-                name="state"
+                name="city"
                 onChange={handleChange}
                 required
                 select
@@ -143,7 +177,7 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
                 value={values.city}
                 variant="outlined"
               >
-                {states.map(option => (
+                {cities.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -154,7 +188,7 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
             Save details
           </Button>
           <Button color="primary" variant="contained" onClick={()=>closeModal()}>

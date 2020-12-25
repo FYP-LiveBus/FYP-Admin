@@ -6,12 +6,15 @@ import {
   Button,
   Card,
   CardContent,
-  CardHeader,
+  // CardHeader,
   Divider,
   Grid,
   TextField,
   makeStyles
 } from '@material-ui/core';
+import axios from 'axios';
+import {useDispatch} from 'react-redux';
+import {addNotification} from 'src/Redux/actions'
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -20,6 +23,7 @@ const useStyles = makeStyles(() => ({
 const NotificationForm = ({ className, closeModal, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
+    subject: '',
     message: ''
   });
 
@@ -29,6 +33,27 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+
+  const dispatch = useDispatch()
+
+  const saveHandler = () => {
+    console.log(values);
+    axios.post("https://livebusapi.herokuapp.com/api/admin/notifications/",
+    {
+      subject: values.subject,
+      message: values.message,
+    })
+      .then(response=>{
+        let notification = response.data
+        // alert(response.data);
+        console.log(response.data)
+        dispatch(addNotification(notification));
+      })
+      .catch(err=>{
+        alert(err)
+      })
+      closeModal()
+  }
 
   return (
     <form
@@ -48,6 +73,7 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
                 name="subject"
                 onChange={handleChange}
                 required
+                value={values.subject}
                 variant="outlined"
               />
             </Grid>
@@ -67,7 +93,10 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+        <Button style={{marginRight: 10}} color="primary" variant="contained" onClick={()=>closeModal()}>
+            Cancel
+          </Button>
+          <Button color="primary" variant="contained" onClick={()=>saveHandler()}>
             Send
           </Button>
         </Box>

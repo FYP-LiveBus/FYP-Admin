@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminListView = () => {
   const classes = useStyles();
-  // const [students] = useState(data);
   const state = useSelector(state => state)
   return (
     <Page

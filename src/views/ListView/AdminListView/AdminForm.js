@@ -38,16 +38,13 @@ const useStyles = makeStyles(() => ({
 const AdminForm = ({ className, closeModal, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
-    firstName: '',
-    lastName: '',
+    firstname: '',
+    lastname: '',
     username: '',
     email: '',
-    phone: '',
+    phonenumber: '',
     password: '',
-    // age: '',
-    // dateOfBirth: '',
-    // city: '',
-    profilePicture: ''
+    city: '',
   });
 
   const handleChange = event => {
@@ -61,25 +58,26 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
   const saveHandler = () => {
     axios.post("https://livebusapi.herokuapp.com/api/users/register-admin/",
     {
-      firstName: values.firstName,
-      lastName: values.lastName,
+      firstname: values.firstname,
+      lastname: values.lastname,
       email: values.email,
       username: values.username,
       password: values.password,  
-      phone: values.phone,
-      // city: values.city,
+      phonenumber: values.phonenumber,
+      city: values.city,
     })
       .then(response=>{
         let user = response.data
         // alert(response.data);
-        console.log(response.data)
         dispatch(addAdmin(user));
+        console.log(user)
+        alert("Admin saved successfully");
       })
       .catch(err=>{
         alert(err)
       })
-      // closeModal()
-      // alert("Admin saved successfully");
+      closeModal()
+      
   }
 
   return (
@@ -98,10 +96,10 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="First name"
-                name="firstName"
+                name="firstname"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.firstname}
                 variant="outlined"
               />
             </Grid>
@@ -109,10 +107,10 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Last name"
-                name="lastName"
+                name="lastname"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.lastname}
                 variant="outlined"
               />
             </Grid>
@@ -130,10 +128,21 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
+                label="Password"
+                name="password"
+                onChange={handleChange}
+                required
+                value={values.password}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
                 label="Email"
                 name="email"
                 onChange={handleChange}
-                value={values.age}
+                value={values.email}
                 variant="outlined"
               />
             </Grid>
@@ -141,11 +150,11 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Phone Number"
-                name="phone"
+                name="phonenumber"
                 onChange={handleChange}
                 type="number"
                 required
-                value={values.phone}
+                value={values.phonenumber}
                 variant="outlined"
               />
             </Grid>
@@ -164,7 +173,7 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Select City"
-                name="state"
+                name="city"
                 onChange={handleChange}
                 required
                 // select

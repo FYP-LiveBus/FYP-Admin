@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -20,7 +20,6 @@ const useStyles = makeStyles((theme) => ({
 
 const DriverListView = () => {
   const classes = useStyles();
-  // const [customers] = useState(data);
   const state = useSelector(state => state)
   
   return (

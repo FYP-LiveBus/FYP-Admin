@@ -5,8 +5,9 @@ import {
   makeStyles
 } from '@material-ui/core';
 import Page from 'src/components/Page';
-import Notifications from './Notifications';
+// import Notifications from './Notifications';
 import Password from './Password';
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -19,16 +20,17 @@ const useStyles = makeStyles((theme) => ({
 
 const SettingsView = () => {
   const classes = useStyles();
+  const state = useSelector(state => state)
 
   return (
     <Page
       className={classes.root}
       title="Settings"
     >
-      <Container maxWidth="lg">
-        <Notifications />
+      <Container maxWidth="md">
+        {/* <Notifications /> */}
         <Box mt={3}>
-          <Password />
+          <Password user={state.user} />
         </Box>
       </Container>
     </Page>

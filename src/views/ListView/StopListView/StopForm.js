@@ -12,6 +12,9 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
+import { useDispatch } from 'react-redux';
+import axios from 'axios';
+import { addStop } from 'src/Redux/actions';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -20,9 +23,11 @@ const useStyles = makeStyles(() => ({
 const StopForm = ({ className, closeModal, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
+    stopNo: 0,
     stopName: '',
-    lat: '',
-    long: '',
+    latitude: {$numberDecimal: 0.0},
+    longitude: {$numberDecimal: 0.0},
+    status: ''
   });
 
   const handleChange = event => {
@@ -31,6 +36,30 @@ const StopForm = ({ className, closeModal, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+
+  const dispatch = useDispatch()
+
+  const saveHandler = () => {
+    console.log(values);
+    axios.post("https://livebusapi.herokuapp.com/api/admin/stops/",
+    {
+      stopNo: values.stopNo,
+      stopName: values.stopName,
+      latitude: values.latitude,
+      longitude: values.longitude,
+      status: values.status,
+    })
+      .then(response=>{
+        let user = response.data
+        // alert(response.data);
+        console.log(response.data)
+        dispatch(addStop(user));
+      })
+      .catch(err=>{
+        alert(err)
+      })
+      closeModal()
+  }
 
   return (
     <form
@@ -44,14 +73,15 @@ const StopForm = ({ className, closeModal, ...rest }) => {
         <Divider />
         <CardContent>
           <Grid container spacing={3}>
-            <Grid item md={12} xs={12}>
+            <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Stop Name"
-                name="stopName"
+                label="Stop No"
+                name="stopNo"
                 onChange={handleChange}
                 required
-                value={values.routeNo}
+                type="number"
+                value={values.stopNo}
                 variant="outlined"
               />  
             </Grid>
@@ -62,7 +92,42 @@ const StopForm = ({ className, closeModal, ...rest }) => {
                   name="stopName"
                   onChange={handleChange}
                   required
-                  value={values.routeNo}
+                  value={values.stopName}
+                  variant="outlined"
+                />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                  fullWidth
+                  label="Latitude"
+                  name="latitude"
+                  onChange={handleChange}
+                  required
+                  type="number"
+                  value={values.latitude}
+                  variant="outlined"
+                />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                  fullWidth
+                  label="Longitude"
+                  name="longitude"
+                  onChange={handleChange}
+                  required
+                  type="number"
+                  value={values.longitude}
+                  variant="outlined"
+                />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                  fullWidth
+                  label="Status"
+                  name="status"
+                  onChange={handleChange}
+                  required
+                  value={values.status}
                   variant="outlined"
                 />
             </Grid>
@@ -70,8 +135,11 @@ const StopForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>    
-          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
             Save details
+          </Button>
+          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+            Cancel
           </Button>
         </Box>
       </Card>

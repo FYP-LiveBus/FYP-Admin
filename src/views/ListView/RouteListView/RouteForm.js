@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -10,73 +10,66 @@ import {
   Divider,
   Grid,
   TextField,
-  makeStyles
+  makeStyles,
+  Select, 
+  MenuItem, 
+  Input, 
+  InputLabel
 } from '@material-ui/core';
-import {useDispatch} from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import axios from 'axios';
 import {addRoute} from 'src/Redux/actions';
 
-const stops = [
-  {
-    value: 'Shahdara',
-    label: 'Shahdara'
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 400,
+    },
   },
-  {
-    value: 'Minar-e-Pakistan',
-    label: 'Minar-e-Pakistan'
-  },
-  {
-    value: 'Gulshan-e-Ravi',
-    label: 'Gulshan-e-Ravi'
-  },
-  {
-    value: 'Muslim Town',
-    label: 'Muslim Town'
-  }
-];
-
-const driversList = [
-  {
-    value: 'Akmal Qasim',
-    label: 'Akmal Qasim'
-  },
-  {
-    value: 'Anwar Saleem',
-    label: 'Anwar Saleem'
-  },
-  {
-    value: 'Junaid Aziz',
-    label: 'Junaid Aziz'
-  }
-];
-
-const status = [
-  {
-    value: 'Active',
-    label: 'Active'
-  },
-  {
-    value: 'InActive',
-    label: 'InActive'
-  }
-]
+};
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
 const RouteForm = ({ className, closeModal, ...rest }) => {
+
+  // const state = useSelector(state=>state)
   const classes = useStyles();
   const [values, setValues] = useState({
     routeNo: '',
+    routeName: '',
     startingPoint: '',
     endingPoint: 'Comsats',
-    noOfStops: 0,
     stops: [],
+    selectiveStops: [],
     driversList:[],
     status:'',
-    // driver:''
+    driver:{}
   });
+
+  
+
+  useEffect(() => {
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
+    .then(response=>{
+      setValues({...values, driversList: response.data});
+    })
+    .catch(err=>alert(err))
+  },[])
+
+  useEffect(() => {
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
+    .then(response=>{
+      console.log(response.data)
+      setValues({...values, stops: response.data});
+    })
+    .catch(err=>alert(err))
+  },[])
+
 
   const handleChange = event => {
     setValues({
@@ -85,20 +78,23 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
     });
   };
 
+  const handleChangeMultiple = (event) => {
+    setValues({...values, selectiveStops: event.target.value});
+  };
 
   const dispatch = useDispatch()
 
   const saveHandler = () => {
     console.log(values);
-    axios.post("https://livebusapi.herokuapp.com/api/admin/routes/",
+    axios.post("https://livebusapi.herokuapp.com/api/admin/routes",
     {
       routeNo: values.routeNo,
       routeName: values.routeName,
       startingPoint: values.startingPoint,
-      noOfStops: values.noOfStops,
-      stops: [],
+      stops: values.stops,
       status: values.status,
-      driver: values.drivers
+      // drivers: values.driversList,
+      driver: values.driver,
     })
       .then(response=>{
         let route = response.data
@@ -148,16 +144,23 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="No Of Stops"
-                name="noOfStops"
-                onChange={handleChange}
-                type="number"
-                required
-                value={values.noOfStops}
-                variant="outlined"
-              />
+            <InputLabel id="demo-mutiple-name-label">Stops</InputLabel>
+              <Select
+                labelId="demo-mutiple-name-label"
+                id="demo-mutiple-name"
+                multiple={true}
+                value={values.selectiveStops}
+                onChange={handleChangeMultiple}
+                input={<Input />}
+                MenuProps={MenuProps}
+                style={{width:"400px"}}
+              >
+                {values.stops.map((stop) => (
+                  <MenuItem key={stop.stopName} value={stop.stopName} >
+                    {stop.stopName}
+                  </MenuItem>
+                ))}
+              </Select>
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
@@ -171,9 +174,9 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 value={values.startingPoint}
                 variant="outlined"
               >
-                {stops.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                {values.stops.map(stop => (
+                  <option key={stop._id} value={stop.stopName}>
+                    {stop.stopName}
                   </option>
                 ))}
               </TextField>
@@ -187,12 +190,12 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.driversList}
+                value={values.driver}
                 variant="outlined"
               >
-                {driversList.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
+                {values.driversList.map(dr => (
+                  <option key={dr._id} value={dr.username}>
+                    {`${dr.firstname} ${dr.lastname}`}
                   </option>
                 ))}
               </TextField>

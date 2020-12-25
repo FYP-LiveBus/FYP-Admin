@@ -19,20 +19,20 @@ const useStyles = makeStyles((theme) => ({
     height: '100%'
   },
   avatar: {
-    backgroundColor: colors.green[600],
+    backgroundColor: colors.yellow[600],
     height: 56,
     width: 56
   },
   differenceIcon: {
-    color: colors.green[900]
+    color: colors.yellow[900]
   },
   differenceValue: {
-    color: colors.green[900],
+    color: colors.yellow[900],
     marginRight: theme.spacing(1)
   }
 }));
 
-const TotalStudents = ({count, className, ...rest }) => {
+const TotalBuses = ({count, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -52,7 +52,7 @@ const TotalStudents = ({count, className, ...rest }) => {
               gutterBottom
               variant="h6"
             >
-              Students
+              Buses
             </Typography>
             <Typography
               color="textPrimary"
@@ -93,8 +93,8 @@ const TotalStudents = ({count, className, ...rest }) => {
   );
 };
 
-TotalStudents.propTypes = {
+TotalBuses.propTypes = {
   className: PropTypes.string
 };
 
-export default TotalStudents;
+export default TotalBuses;

@@ -1,5 +1,33 @@
 import * as actions from './actionTypes'
 
+export const countDrivers = (value) => ({
+    type: actions.COUNT_DRIVERS,
+    payload: {
+        value,
+    }
+});
+
+export const countConductors = (value) => ({
+    type: actions.COUNT_CONDUCTORS,
+    payload: {
+        value,
+    }
+});
+
+export const countStudents = (value) => ({
+    type: actions.COUNT_STUDENTS,
+    payload: {
+        value,
+    }
+});
+
+export const countBuses = (value) => ({
+    type: actions.COUNT_BUSES,
+    payload: {
+        value,
+    }
+});
+
 export const login = (user) => ({
     type: actions.LOGIN,
     payload: {
@@ -63,10 +91,24 @@ export const viewRoute = (routes) => ({
     }
 });
 
+export const viewStop = (stops) => ({
+    type: actions.VIEW_STOP,
+    payload: {
+        stops,
+    }
+});
+
 export const addAdmin = (admin) => ({
     type: actions.ADD_ADMIN,
     payload: {
         admin
+    }
+});
+
+export const addSubAdmin = (subadmin) => ({
+    type: actions.ADD_SUBADMIN,
+    payload: {
+        subadmin
     }
 });
 
@@ -84,6 +126,13 @@ export const addConductor = (conductor) => ({
     }
 });
 
+export const addStudent = (student) => ({
+    type: actions.ADD_STUDENT,
+    payload: {
+        student
+    }
+});
+
 export const addBus = (bus) => ({
     type: actions.ADD_BUS,
     payload: {
@@ -98,13 +147,34 @@ export const addRoute = (route) => ({
     }
 });
 
-// export const deleteDriver = (driver) => ({
-//     type: actions.DELETE_DRIVER,
-//     payload: {
-//         driver
-//     }
-// });
+export const addStop = (stop) => ({
+    type: actions.ADD_STOP,
+    payload: {
+        stop
+    }
+});
 
+export const addNotification = (notification) => ({
+    type: actions.ADD_NOTIFICATION,
+    payload: {
+        notification
+    }
+});
+
+export const viewNotification = (notifications) => ({
+    type: actions.VIEW_NOTIFICATION,
+    payload: {
+        notifications
+    }
+});
+
+
+export const updateDriver = (driver) => ({
+    type: actions.UPDATE_DRIVER,
+    payload: {
+        driver
+    }
+});
 
 
 export const logOut = (user) => ({

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import {useSelector, useDispatch} from 'react-redux'
-import {saveUser} from 'src/Redux/actions'
+import { saveUser } from 'src/Redux/actions'
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -16,39 +16,22 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 
-const states = [
-  {
-    value: 'Lahore',
-    label: 'Lahore'
-  },
-  {
-    value: 'Karachi',
-    label: 'Karachi'
-  },
-  {
-    value: 'Islamabad',
-    label: 'Islamabad'
-  }
-];
-
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ProfileDetails = ({ className, ...rest }) => {
+const ProfileDetails = ({user, className, ...rest }) => {
   const classes = useStyles();
-  const state = useSelector(state => state)
   const dispatch = useDispatch()
 
   const [values, setValues] = useState({
-    firstName: state.user.firstname,
-    lastName: state.user.lastname,
-    email: state.user.email,
-    role:state.user.role,
-    phone: state.user.phonenumber,
-    state: '',
-    country: 'Pakistan'
-
+    firstname: user.firstname,
+    lastname: user.lastname,
+    email: user.email,
+    username: user.username,
+    role:user.role,
+    phonenumber: user.phonenumber,
+    city: user.city,  
   });
 
   const handleChange = event => {
@@ -59,23 +42,22 @@ const ProfileDetails = ({ className, ...rest }) => {
   };
 
   const saveHandler = () => {
-
     console.log(values)
-    console.log(state.user.user_id)
-    axios.put(`https://livebusapi.herokuapp.com/api/users/${state.user.user_id}`, 
+    console.log(user._id)
+    axios.put(`https://livebusapi.herokuapp.com/api/users/${user._id}`, 
     {
-      firstName: values.firstname,
-      lastName: values.lastname,
+      firstname: values.firstname,
+      lastname: values.lastname,
       email: values.email,
+      username: values.username,
       role: values.role,
-      phone: values.phonenumber,
-      // username: values.username,
-      
+      phonenumber: values.phonenumber,
+      city: values.city
     })
     .then( response => {
       console.log(response.data)
       dispatch(saveUser(response.data));
-
+      alert("Updated Successfully")
     })
     .catch(err=>{
       alert(err);
@@ -103,7 +85,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="firstName"
                 onChange={handleChange}
                 required
-                value={values.firstName}
+                value={values.firstname}
                 variant="outlined"
               />
             </Grid>
@@ -114,7 +96,7 @@ const ProfileDetails = ({ className, ...rest }) => {
                 name="lastName"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.lastname}
                 variant="outlined"
               />
             </Grid>
@@ -132,7 +114,18 @@ const ProfileDetails = ({ className, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="User Role"
+                label="Username"
+                name="username"
+                onChange={handleChange}
+                required
+                value={values.username}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Role"
                 name="role"
                 onChange={handleChange}
                 required
@@ -144,42 +137,39 @@ const ProfileDetails = ({ className, ...rest }) => {
               <TextField
                 fullWidth
                 label="Phone Number"
-                name="phone"
+                name="phonenumber"
                 onChange={handleChange}
                 type="number"
-                value={values.phone}
+                required
+                value={values.phonenumber}
                 variant="outlined"
               />
             </Grid>
             <Grid item md={6} xs={12}>
-              <TextField
+            <TextField
                 fullWidth
-                label="Country"
-                name="country"
+                label="City"
+                name="city"
                 onChange={handleChange}
                 required
-                value={values.country}
+                value={values.city}
                 variant="outlined"
               />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
+              {/* <TextField
                 fullWidth
-                label="Select State"
-                name="state"
+                label="City"
+                name="city"
                 onChange={handleChange}
                 required
-                select
-                SelectProps={{ native: true }}
-                value={values.state}
+                value={values.city}
                 variant="outlined"
-              >
-                {states.map(option => (
+              /> */}
+                {/* {states.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
-                ))}
-              </TextField>
+                ))} */}
+              {/* </TextField> */}
             </Grid>
           </Grid>
         </CardContent>

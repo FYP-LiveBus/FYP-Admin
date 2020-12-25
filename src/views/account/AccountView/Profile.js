@@ -14,26 +14,10 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const user = {
-  avatar: '/static/images/avatars/avatar_6.png',
-  city: 'Lahore',
-  country: 'Pakistan',
-  jobTitle: 'Student',
-  name: 'Tehreem Anjum',
+const userDetails = {
+  avatar: '/static/images/avatars/adminLogo.png',
   timezone: 'GTM-5'
 };
-
-// const profileHandler = () => {
-//   var apiBaseURL = 'http://localhost:5000/api/users/profile';
-//   var payload = {
-//     username: this.state.username,
-//     password: this.state.password
-//   }
-//   axios.get(apiBaseURL, payload)
-//     .then()
-//     .catch()
-
-// }
 
 const useStyles = makeStyles(() => ({
   root: {},
@@ -43,35 +27,35 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Profile = ({ className, ...rest }) => {
+const Profile = ({user, className, ...rest }) => {
   const classes = useStyles();
 
   return (
     <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
         <Box alignItems="center" display="flex" flexDirection="column">
-          <Avatar className={classes.avatar} src={user.avatar} />
+          <Avatar className={classes.avatar} src={userDetails.avatar} />
           <Typography color="textPrimary" gutterBottom variant="h3">
-            {user.name}
+            {`${user.firstname} ${user.lastname}`}
           </Typography>
           <Typography color="textSecondary" variant="body1">
-            {`${user.city} ${user.country}`}
+            {`${user.city}`}
           </Typography>
           <Typography
             className={classes.dateText}
             color="textSecondary"
             variant="body1"
           >
-            {`${moment().format('hh:mm A')} ${user.timezone}`}
+            {`${moment().format('hh:mm A')} ${userDetails.timezone}`}
           </Typography>
         </Box>
       </CardContent>
-      <Divider />
-      <CardActions>
+      {/* <Divider /> */}
+      {/* <CardActions>
         <Button color="primary" fullWidth variant="text">
           Upload picture
         </Button>
-      </CardActions>
+      </CardActions> */}
     </Card>
   );
 };

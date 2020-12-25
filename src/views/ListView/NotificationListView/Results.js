@@ -26,42 +26,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, students, ...rest }) => {
+const Results = ({ className, notifications, ...rest }) => {
   const classes = useStyles();
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [selectedNotificationIds, setSelectedNotificationIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedStudentIds;
+    let newSelectedNotificationIds;
 
     if (event.target.checked) {
-      newSelectedStudentIds = students.map((student) => student.id);
+      newSelectedNotificationIds = notifications.map((notification) => notification._id);
     } else {
-      newSelectedStudentIds = [];
+      newSelectedNotificationIds = [];
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedNotificationIds(newSelectedNotificationIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedStudentIds.indexOf(id);
-    let newSelectedStudentIds = [];
+    const selectedIndex = selectedNotificationIds.indexOf(id);
+    let newSelectedNotificationIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds, id);
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(1));
-    } else if (selectedIndex === selectedStudentIds.length - 1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(0, -1));
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds.slice(1));
+    } else if (selectedIndex === selectedNotificationIds.length - 1) {
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(
-        selectedStudentIds.slice(0, selectedIndex),
-        selectedStudentIds.slice(selectedIndex + 1)
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(
+        selectedNotificationIds.slice(0, selectedIndex),
+        selectedNotificationIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedNotificationIds(newSelectedNotificationIds);
   };
 
   const handleLimitChange = (event) => {
@@ -82,78 +82,35 @@ const Results = ({ className, students, ...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedStudentIds.length === students.length}
-                    color="primary"
-                    indeterminate={
-                      selectedStudentIds.length > 0
-                      && selectedStudentIds.length < students.length
-                    }
-                    onChange={handleSelectAll}
-                  />
+             
+                <TableCell>
+                  Subject
                 </TableCell>
                 <TableCell>
-                  Name
+                  Message
                 </TableCell>
                 <TableCell>
-                  Email
+                  Date
                 </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Registration date
-                </TableCell>
+
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.slice(0, limit).map((student) => (
+              {notifications.slice(0, limit).map((notification) => (
                 <TableRow
                   hover
-                  key={student.id}
-                  selected={selectedStudentIds.indexOf(student.id) !== -1}
-                >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedStudentIds.indexOf(student.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, student.id)}
-                      value="true"
-                    />
+                  key={notification._id}
+                  selected={selectedNotificationIds.indexOf(notification._id) !== -1}
+                >                  
+                  <TableCell>
+                    {notification.subject}
                   </TableCell>
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Avatar
-                        className={classes.avatar}
-                        src={student.avatarUrl}
-                      >
-                        {getInitials(student.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {student.name}
-                      </Typography>
-                    </Box>
+                    {notification.message}
                   </TableCell>
                   <TableCell>
-                    {student.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${student.address.city}, ${student.address.state}, ${student.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {student.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(student.createdAt).format('DD/MM/YYYY')}
+                    {notification.created_at}
+                    {/* {moment(notification.createdAt).format('DD/MM/YYYY')} */}
                   </TableCell>
                 </TableRow>
               ))}
@@ -163,7 +120,7 @@ const Results = ({ className, students, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={students.length}
+        count={notifications.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -176,7 +133,7 @@ const Results = ({ className, students, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  students: PropTypes.array.isRequired
+  notifications: PropTypes.array.isRequired
 };
 
 export default Results;

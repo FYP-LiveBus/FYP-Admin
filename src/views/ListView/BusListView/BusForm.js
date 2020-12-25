@@ -19,6 +19,10 @@ import {addBus} from 'src/Redux/actions'
 
 const states = [
   {
+    value: '',
+    label: ''
+  },
+  {
     value: 'auto',
     label: 'Auto'
   },

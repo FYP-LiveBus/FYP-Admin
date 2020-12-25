@@ -80,14 +80,13 @@ const Results = ({ className, students, ...rest }) => {
      .then(response => {
        alert("Student deleted successfully")
        console.log(response.data)
-        // dispatch(viewConductor(response.data));
+       
        })
      .catch(err => {
        alert("In Catch")
        alert(err)
      });
  }
-
 
   return (
     <Card
@@ -154,12 +153,12 @@ const Results = ({ className, students, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
+                      {/* <Avatar
                         className={classes.avatar}
                         src={student.avatarUrl}
-                      >
+                      > */}
                         {getInitials(student.name)}
-                      </Avatar>
+                      {/* </Avatar> */}
                       <Typography
                         color="textPrimary"
                         variant="body1"
@@ -186,9 +185,6 @@ const Results = ({ className, students, ...rest }) => {
                   <TableCell>
                     {student.phone}
                   </TableCell>
-                  {/* <TableCell>
-                    <Button variant="contained" color="primary">Enable</Button>
-                  </TableCell> */}
                   <TableCell>
                     <Button onClick={()=>handleDelete(student._id)} variant="contained" color="secondary">Delete</Button>
                   </TableCell>

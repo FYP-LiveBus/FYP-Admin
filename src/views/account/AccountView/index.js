@@ -7,6 +7,7 @@ import {
 import Page from 'src/components/Page';
 import Profile from './Profile';
 import ProfileDetails from './ProfileDetails';
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,7 +19,10 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Account = () => {
+
   const classes = useStyles();
+  
+  const state = useSelector(state => state)
 
   return (
     <Page
@@ -36,7 +40,7 @@ const Account = () => {
             md={6}
             xs={12}
           >
-            <Profile />
+            <Profile user={state.user} />
           </Grid>
           <Grid
             item
@@ -44,7 +48,7 @@ const Account = () => {
             md={6}
             xs={12}
           >
-            <ProfileDetails />
+            <ProfileDetails user={state.user}/>
           </Grid>
         </Grid>
       </Container>

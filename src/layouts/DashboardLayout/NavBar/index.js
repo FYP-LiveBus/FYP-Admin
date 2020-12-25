@@ -13,11 +13,11 @@ import {
   makeStyles
 } from '@material-ui/core';
 import {
-  AlertCircle as AlertCircleIcon,
+  // AlertCircle as AlertCircleIcon,
   BarChart as BarChartIcon,
   Lock as LockIcon,
   Settings as SettingsIcon,
-  ShoppingBag as ShoppingBagIcon,
+  // ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   // UserPlus as UserPlusIcon,
   Users as UsersIcon
@@ -25,8 +25,7 @@ import {
 import NavItem from './NavItem';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import {viewBus, viewDriver, viewConductor, viewStudent, viewAdmin, viewSubAdmin, viewRoute} from 'src/Redux/actions';
-
+import { viewBus, viewDriver, viewConductor, viewStudent, viewAdmin, viewSubAdmin, viewRoute, viewStop, viewNotification} from 'src/Redux/actions';
 
 const items = [
   {
@@ -87,7 +86,7 @@ const items = [
   {
     href: '/app/notifications',
     icon: LockIcon,
-    title: 'Notifictions'
+    title: 'Notifications'
   },
   {
     href: '/app/feedbacks',
@@ -146,8 +145,9 @@ const NavBar = ({ onMobileClose, openMobile }) => {
 
   const clickHandler = (title) => {
     let t = title.charAt(0).toLowerCase() + title.slice(1)
-    if(t === "dashboard" || t === "account" || t === "settings" || t=== "trips" || t === "notifications" || t === "feedbacks"){}
-    else if (t === "drivers" || t === "conductors" || t === "buses" || t === "routes" || t === "students" || t === "stops") {
+
+    if(t === "dashboard" || t === "settings" || t=== "trips" || t === "feedbacks" || t === "account"){}
+    else if (t === "drivers" || t === "conductors" || t === "buses" || t === "routes" || t === "stops"|| t === "notifications") {
       axios.get(`https://livebusapi.herokuapp.com/api/admin/${t}/`)
       .then(response => {
         if(t==="buses")
@@ -156,18 +156,21 @@ const NavBar = ({ onMobileClose, openMobile }) => {
           dispatch(viewConductor(response.data));
         else if(t==="drivers")
           dispatch(viewDriver(response.data));
-        else if(t==="students")
-          dispatch(viewStudent(response.data));
         else if(t==="routes")
           dispatch(viewRoute(response.data));
-          // else if(t==="stops")
-        //   dispatch(viewStop(response.data));
-        // else if(t==="feedbacks")
-        //   dispatch(viewFeedback(response.data));
+        else if(t === "notifications")
+          dispatch(viewNotification(response.data));
+        else if(t === "stops")
+          dispatch(viewStop(response.data));
       })
-      .catch(err => {
-        alert(err)
-      });
+      .catch( err => alert(err) )
+    }
+    else if(t==="students"){
+      axios.get(`https://livebusapi.herokuapp.com/api/admin/students/Accept`)
+      .then((response)=>{
+        dispatch(viewStudent(response.data));
+      })
+      .catch( err=>alert(err) ) 
     }
     else{
       axios.get(`https://livebusapi.herokuapp.com/api/users/${t}/`)
@@ -177,11 +180,8 @@ const NavBar = ({ onMobileClose, openMobile }) => {
         else if(t==="subadmins")
           dispatch(viewSubAdmin(response.data));
       })
-      .catch(err => {
-        alert(err)
-      });
+      .catch( err => alert(err) )
     }
-
   }
 
   useEffect(() => {
@@ -192,7 +192,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   }, [location.pathname]);
 
   const user = {
-    avatar: '/static/images/avatars/avatar_6.png',
+    avatar: '/static/images/avatars/adminLogo.png',
     jobTitle: state.user.role,
     name: state.user.username,
   };

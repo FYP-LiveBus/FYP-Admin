@@ -20,8 +20,8 @@ import {
 } from '@material-ui/core';
 import getInitials from 'src/utils/getInitials';
 import axios from 'axios';
-// import {deleteDriver} from 'src/Redux/actions'
-import {useDispatch} from 'react-redux'
+import { updateDriver } from 'src/Redux/actions'
+import { useDispatch } from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -79,6 +79,31 @@ const Results = ({ className, drivers, ...rest }) => {
 
   const dispatch = useDispatch()
 
+  const handleEdit = (values,id) => {
+    alert(id)
+    axios.put(`https://livebusapi.herokuapp.com/api/admin/drivers/${id}/`,
+    {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      username: values.username,
+      password: values.password,
+      phone: values.phone,
+      licensenumber: values.licensenumber,
+      age: values.age,
+      city: values.city,
+      profilePicture: values.profilePicture,
+    })
+     .then(response => {
+       alert("Driver updated successfully")
+       console.log(response.data)
+         dispatch(updateDriver(response.data));
+       })
+     .catch(err => {
+       alert("In Catch")
+       alert(err)
+     });
+  }
+
   const handleDelete = (id) => {
     alert(id)
     axios.delete(`https://livebusapi.herokuapp.com/api/admin/drivers/${id}/`)
@@ -92,7 +117,6 @@ const Results = ({ className, drivers, ...rest }) => {
        alert(err)
      });
   }
-
 
   return (
     <Card
@@ -179,7 +203,7 @@ const Results = ({ className, drivers, ...rest }) => {
                     {driver.licensenumber}
                   </TableCell>
                   <TableCell>
-                    {driver.phonenumber}
+                    {driver.phone}
                   </TableCell>
                   <TableCell>
                     {driver.age}
@@ -188,7 +212,7 @@ const Results = ({ className, drivers, ...rest }) => {
                     {driver.city}
                   </TableCell>
                   <TableCell>
-                    <Button variant="contained" color="primary">Edit</Button>
+                    <Button onClick={()=>handleEdit(driver._id)} variant="contained" color="primary">Edit</Button>
                   </TableCell>
                   <TableCell>
                     <Button onClick={()=>handleDelete(driver._id)} variant="contained" color="secondary">Delete</Button>

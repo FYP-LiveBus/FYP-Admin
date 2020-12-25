@@ -34,8 +34,6 @@ const Results = ({ className, buses, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  // console.log(buses)
-
   const handleSelectAll = (event) => {
     let newSelectedBusIds;
 
@@ -54,7 +52,7 @@ const Results = ({ className, buses, ...rest }) => {
     .then(response => {
       alert("Bus deleted successfully")
       console.log(response.data)
-      // dispatch(deleteBus(response.data));
+      // dispatch(viewBus(response.data));
     })
     .catch(err => {
       alert(err)

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -8,7 +8,7 @@ import Page from 'src/components/Page';
 import Results from './Results';
 // import Toolbar from './Toolbar';
 import MyModal from 'src/components/modal';
-import data from './data';
+import { useSelector } from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -21,7 +21,7 @@ const useStyles = makeStyles((theme) => ({
 
 const NotificationListView = () => {
   const classes = useStyles();
-  const [students] = useState(data);
+  const state = useSelector(state => state)
 
   return (
     <Page
@@ -32,7 +32,7 @@ const NotificationListView = () => {
         {/* <Toolbar /> */}
         <MyModal case={'N'} name={"Notification"}/>
         <Box mt={3}>
-          <Results students={students} />
+          <Results notifications={state.notifications} />
         </Box>
       </Container>
     </Page>

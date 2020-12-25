@@ -167,7 +167,7 @@ const Results = ({ className, admins, ...rest }) => {
                     {admin.email}
                   </TableCell>
                   <TableCell>
-                    {admin.phone}
+                    {admin.phonenumber}
                   </TableCell>
                   <TableCell>
                     {/* {moment(admin.createdAt).format('DD/MM/YYYY')} */}

@@ -16,20 +16,24 @@ import axios from 'axios';
 import {useDispatch} from 'react-redux';
 import {addDriver} from 'src/Redux/actions'
 
-const states = [
-  {
-    value: 'Lahore',
-    label: 'Lahore'
-  },
-  {
-    value: 'Karachi',
-    label: 'Karachi'
-  },
-  {
-    value: 'Islamabad',
-    label: 'Islamabad'
-  }
-];
+// const states = [
+//   {
+//     value: '',
+//     label: ''
+//   },
+//   {
+//     value: 'Lahore',
+//     label: 'Lahore'
+//   },
+//   {
+//     value: 'Karachi',
+//     label: 'Karachi'
+//   },
+//   {
+//     value: 'Islamabad',
+//     label: 'Islamabad'
+//   }
+// ];
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -74,7 +78,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
     })
       .then(response=>{
         let user = response.data
-        // alert(response.data);
+        alert(response.data);
         console.log(response.data)
         dispatch(addDriver(user));
       })
@@ -82,7 +86,6 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
         alert(err)
       })
       closeModal()
-      // alert("Admin saved successfully");
   }
 
 
@@ -148,7 +151,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 label="Phone Number"
                 name="phone"
                 onChange={handleChange}
-                type="number"
+                // type="number"
                 required
                 value={values.phone}
                 variant="outlined"
@@ -166,30 +169,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 value={values.age}
                 variant="outlined"
               />
-            </Grid>
-            {/* <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Date of Birth"
-                name="dob"
-                onChange={handleChange}
-                type="date"
-                value={values.dateOfBirth}
-                variant="outlined"
-              />
-            </Grid>
-            <Grid item md={6} xs={12}>
-              <TextField
-                fullWidth
-                label="Date of Joining"
-                name="doj"
-                onChange={handleChange}
-                type="date"
-                value={values.dateOfJoining}
-                required
-                variant="outlined"
-              /> 
-            </Grid>*/ }
+            </Grid> 
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
@@ -204,7 +184,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Select City"
+                label="City"
                 name="city"
                 onChange={handleChange}
                 required

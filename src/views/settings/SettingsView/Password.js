@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import {useSelector, useDispatch} from 'react-redux'
 import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
@@ -11,14 +12,23 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
+import axios from 'axios';
+import { saveUser } from 'src/Redux/actions'
 
 const useStyles = makeStyles(({
   root: {}
 }));
 
-const Password = ({ className, ...rest }) => {
+const Password = ({user, className, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
+    firstname: user.firstname,
+    lastname: user.lastname,
+    username: user.username,
+    email: user.email,
+    city: user.city,
+    role: user.role,
+    phonenumber: user.phonenumber,
     password: '',
     confirm: ''
   });
@@ -29,6 +39,14 @@ const Password = ({ className, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
+  const dispatch = useDispatch()
+
+  const updateHandler = () => {
+    if(values.password === values.confirm)
+      alert("Password updated successfully");
+    else
+      alert("Password didn't match... Try again.")
+  }
 
   return (
     <form
@@ -72,6 +90,7 @@ const Password = ({ className, ...rest }) => {
           <Button
             color="primary"
             variant="contained"
+            onClick={()=>{updateHandler()}}
           >
             Update
           </Button>

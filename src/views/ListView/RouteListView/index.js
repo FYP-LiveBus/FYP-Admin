@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -7,7 +7,6 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-// import data from './data';
 import {useSelector} from 'react-redux';
 
 const useStyles = makeStyles((theme) => ({
@@ -21,13 +20,12 @@ const useStyles = makeStyles((theme) => ({
 
 const RouteListView = () => {
   const classes = useStyles();
-  // const [students] = useState(data);
   const state = useSelector(state => state)
 
   return (
     <Page
       className={classes.root}
-      title="Student"
+      title="Routes"
     >
       <Container maxWidth={false}>
         <Toolbar />

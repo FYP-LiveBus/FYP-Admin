@@ -15,6 +15,7 @@ import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
 // import MoneyIcon from '@material-ui/icons/Money';
 import PeopleIcon from '@material-ui/icons/PeopleOutlined';
 
+
 const useStyles = makeStyles((theme) => ({
   root: {
     height: '100%'
@@ -33,9 +34,8 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const TotalDrivers = ({ className, ...rest }) => {
+const TotalDrivers = ({ count, className, ...rest }) => {
   const classes = useStyles();
-
   return (
     <Card
       className={clsx(classes.root, className)}
@@ -59,7 +59,7 @@ const TotalDrivers = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              30
+              {JSON.stringify(count)}
             </Typography>
           </Grid>
           <Grid item>

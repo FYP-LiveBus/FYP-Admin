@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TotalConductors = ({ className, ...rest }) => {
+const TotalConductors = ({count, className, ...rest }) => {
   const classes = useStyles();
 
   return (
@@ -49,7 +49,7 @@ const TotalConductors = ({ className, ...rest }) => {
               color="textPrimary"
               variant="h3"
             >
-              31
+              {JSON.stringify(count)}
             </Typography>
           </Grid>
           <Grid item>

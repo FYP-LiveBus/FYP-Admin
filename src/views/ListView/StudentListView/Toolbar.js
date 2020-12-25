@@ -12,7 +12,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
-
+import MyModal from 'src/components/modal';
 const useStyles = makeStyles((theme) => ({
   root: {},
   importButton: {
@@ -37,7 +37,8 @@ const Toolbar = ({ className, ...rest }) => {
       className={clsx(classes.root, className)}
       {...rest}
     >
-      <Box
+      <MyModal case={'ST'} name={"Student"}/>
+      {/* <Box
         display="flex"
         justifyContent="flex-end"
       > 
@@ -49,7 +50,7 @@ const Toolbar = ({ className, ...rest }) => {
           Add Student
         </Button>
         
-      </Box>
+      </Box> */}
       <Box mt={3}>
         <Card>
           <CardContent>

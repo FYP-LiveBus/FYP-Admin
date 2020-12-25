@@ -23,7 +23,7 @@ const useStyles = makeStyles(() => ({
   avatar: {
     width: 60,
     height: 60
-  }
+  },
 }));
 
 const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
@@ -35,7 +35,6 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const handleLogout = () => {
     dispatch(logOut());
   }
-
 
   return (
     <AppBar className={clsx(classes.root, className)} elevation={0} {...rest}>
@@ -51,7 +50,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
               color="primary"
               variant="dot"
             >
-              <NotificationsIcon />
+              {/* <NotificationsIcon /> */}
             </Badge>
           </IconButton>
           <IconButton onClick={handleLogout} color="inherit">

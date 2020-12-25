@@ -5,6 +5,7 @@ import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
   Avatar,
+  Button,
   Box,
   Card,
   Checkbox,
@@ -17,7 +18,9 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
+// import getInitials from 'src/utils/getInitials';
+import axios from 'axios';
+// import {useDispatch} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -26,42 +29,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, students, ...rest }) => {
+const Results = ({ className, stops, ...rest }) => {
   const classes = useStyles();
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [selectedStopIds, setSelectedStopIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedStudentIds;
+    let newSelectedStopIds;
 
     if (event.target.checked) {
-      newSelectedStudentIds = students.map((student) => student.id);
+      newSelectedStopIds = stops.map((stop) => stop._id);
     } else {
-      newSelectedStudentIds = [];
+      newSelectedStopIds = [];
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedStopIds(newSelectedStopIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedStudentIds.indexOf(id);
-    let newSelectedStudentIds = [];
+    const selectedIndex = selectedStopIds.indexOf(id);
+    let newSelectedStopIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds, id);
+      newSelectedStopIds = newSelectedStopIds.concat(selectedStopIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(1));
-    } else if (selectedIndex === selectedStudentIds.length - 1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(0, -1));
+      newSelectedStopIds = newSelectedStopIds.concat(selectedStopIds.slice(1));
+    } else if (selectedIndex === selectedStopIds.length - 1) {
+      newSelectedStopIds = newSelectedStopIds.concat(selectedStopIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(
-        selectedStudentIds.slice(0, selectedIndex),
-        selectedStudentIds.slice(selectedIndex + 1)
+      newSelectedStopIds = newSelectedStopIds.concat(
+        selectedStopIds.slice(0, selectedIndex),
+        selectedStopIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedStopIds(newSelectedStopIds);
   };
 
   const handleLimitChange = (event) => {
@@ -71,6 +74,23 @@ const Results = ({ className, students, ...rest }) => {
   const handlePageChange = (event, newPage) => {
     setPage(newPage);
   };
+
+  // const dispatch = useDispatch()
+
+  const handleDelete = (id) => {
+    alert(id)
+    axios.delete(`https://livebusapi.herokuapp.com/api/admin/stops/${id}/`)
+     .then(response => {
+       alert("Stop deleted successfully")
+       console.log(response.data)
+        //  dispatch(deleteDriver(response.data));
+       })
+     .catch(err => {
+      //  alert("In Catch")
+       alert(err)
+     });
+  }
+
 
   return (
     <Card
@@ -84,76 +104,71 @@ const Results = ({ className, students, ...rest }) => {
               <TableRow>
                 <TableCell padding="checkbox">
                   <Checkbox
-                    checked={selectedStudentIds.length === students.length}
+                    checked={selectedStopIds.length === stops.length}
                     color="primary"
                     indeterminate={
-                      selectedStudentIds.length > 0
-                      && selectedStudentIds.length < students.length
+                      selectedStopIds.length > 0
+                      && selectedStopIds.length < stops.length
                     }
                     onChange={handleSelectAll}
                   />
                 </TableCell>
                 <TableCell>
-                  Name
+                  Stop No
                 </TableCell>
                 <TableCell>
-                  Email
+                  Stop Name
                 </TableCell>
                 <TableCell>
                   Location
                 </TableCell>
                 <TableCell>
-                  Phone
+                  Status
+                </TableCell>
+                {/* <TableCell>
+                  Created At
+                </TableCell> */}
+                <TableCell>
                 </TableCell>
                 <TableCell>
-                  Registration date
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.slice(0, limit).map((student) => (
+              {stops.slice(0, limit).map((stop) => (
                 <TableRow
                   hover
-                  key={student.id}
-                  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                  key={stop._id}
+                  selected={selectedStopIds.indexOf(stop._id) !== -1}
                 >
                   <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedStudentIds.indexOf(student.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, student.id)}
+                      checked={selectedStopIds.indexOf(stop._id) !== -1}
+                      onChange={(event) => handleSelectOne(event, stop._id)}
                       value="true"
                     />
                   </TableCell>
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Avatar
-                        className={classes.avatar}
-                        src={student.avatarUrl}
-                      >
-                        {getInitials(student.name)}
-                      </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {student.name}
-                      </Typography>
-                    </Box>
+                    {stop.stopNo}
                   </TableCell>
                   <TableCell>
-                    {student.email}
+                    {stop.stopName}
                   </TableCell>
                   <TableCell>
-                    {`${student.address.city}, ${student.address.state}, ${student.address.country}`}
+                    {/* {JSON.stringify(stop.latitude)} */}
+                    {`${stop.latitude.$numberDecimal}, ${stop.longitude.$numberDecimal}`}
                   </TableCell>
                   <TableCell>
-                    {student.phone}
+                    {stop.status}
+                  </TableCell>
+                  {/* <TableCell>
+                    {moment(stop.createdAt).format('DD/MM/YYYY')}
+                  </TableCell> */}
+                  <TableCell>
+                    <Button variant="contained" color="primary">Edit</Button>
                   </TableCell>
                   <TableCell>
-                    {moment(student.createdAt).format('DD/MM/YYYY')}
+                    <Button onClick={()=>handleDelete(stop._id)} variant="contained" color="secondary">Delete</Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -163,7 +178,7 @@ const Results = ({ className, students, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={students.length}
+        count={stops.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -176,7 +191,7 @@ const Results = ({ className, students, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  students: PropTypes.array.isRequired
+  stops: PropTypes.array.isRequired
 };
 
 export default Results;

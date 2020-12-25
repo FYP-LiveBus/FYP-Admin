@@ -1,4 +1,4 @@
-import React, {Component, useState} from 'react';
+import React, {useState} from 'react';
 import axios from 'axios';
 import '../../styles/style.css';
 import image from '../../images/image.jpg';
@@ -8,70 +8,60 @@ import { login } from 'src/Redux/actions';
 
 function LoginView () {
 
+  const dispatch = useDispatch()
   const state = useSelector(state => state)
-  // console.log(state)
 
   const [username , setUsername] = useState('')
   const [password , setPassword] = useState('')
-  // const [role , setRole] = useState('')
-  // const [isLoggedIn , setIsLoggedIn] = useState(false)
 
   const usernameHandler = (value) => { setUsername(value); }
   const passwordHandler = (value) => { setPassword(value); }
-  const dispatch = useDispatch()
 
-
+  
   const loginHandler = () => {
     const URL = "https://livebusapi.herokuapp.com/api/users/login-admin";
     axios.post(URL, {username: username, password: password})
       .then((response)=>{
-        // dispatchEvent()
         let user = response.data;
-        console.log(response.data)
         dispatch(login(user))
-
-       })
-      .catch(err => {
+        console.log(user)
+      })
+      .catch(error => {
         alert("Error occure duning authentication!")
-        console.log(err);
-    })
-
-    // console.log(this.state)
+        console.log(error);
+      })
   };
-    
+  
   if(state.isLoggedIn)
     return <Navigate to={'/app/dashboard'} />
   else
     return (
         <div
-        className="container"
-        id="container"
-        style={{ marginTop: 120, marginLeft: 250 }}
-      >
+          className="container"
+          id="container"
+          style={{ marginTop: 120, marginLeft: 250 }}
+        >
         <div className="form form-container sign-in-container">            
           <h1>LIVE BUS</h1>
           <input
             onChange={event => usernameHandler(event.target.value)}
             type="text"
             name="username"
-            placeholder="Username"
+            placeholder="Username" 
           />
           <input 
             onChange={event => passwordHandler(event.target.value)} 
             type="password" 
             name="password" 
-            placeholder="Password" />
-            {/* <Link to="/app/dashboard"> */}
-              <button onClick={()=>loginHandler()}>Login</button>
-            {/* </Link> */}
+            placeholder="Password" 
+          />
+            <button onClick={()=>loginHandler()}>Login</button>
             <a href="#">Forgot Your Password</a>
         </div>
         <div className="overlay-container">
           <div className="overlay">
             <img className="overlay-container" src={image} alt="" />
-            <button className="ghost" id="signIn">
-              Sign In
-            </button>
+            <button className="ghost" id="signIn">Sign In</button>
           </div>
         </div>
       </div>

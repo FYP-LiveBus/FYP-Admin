@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {
   Container,
   Grid,
@@ -6,14 +6,13 @@ import {
 } from '@material-ui/core';
 import Page from 'src/components/Page';
 import TotalDrivers from './TotalDrivers';
-// import LatestOrders from './LatestOrders';
-// import LatestProducts from './LatestProducts';
-import RecentTrips from './RecentTrips';
-import TotalTrips from './TotalTrips';
-import TotalStudents from './TotalStudents';
 import TotalConductors from './TotalConductors';
-import TrafficByDevice from './TrafficByDevice';
+import TotalBuses from './TotalBuses';
+import TotalStudents from './TotalStudents';
 import MapView from '../../maps/mapView3';
+import { useSelector, useDispatch } from 'react-redux'
+import { countDrivers, countConductors, countStudents, countBuses } from 'src/Redux/actions';
+import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -25,6 +24,53 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Dashboard = () => {
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/drivers/getTotal`)
+    .then(response => {
+      dispatch(countDrivers(response.data))
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  },[]);
+
+  useEffect(()=>{
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/conductors/getTotal`)
+    .then(response => {
+      dispatch(countConductors(response.data))
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  },[]);
+
+  useEffect(()=>{
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/students/getTotal`)
+    .then(response => {
+      dispatch(countStudents(response.data))
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  },[]);
+  
+  useEffect(()=>{
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/buses/getTotal`)
+    .then(response => {
+      dispatch(countBuses(response.data))
+      console.log(response.data)
+    })
+    .catch(error => {
+      console.log(error);
+    })
+  },[]);
+
+  const state = useSelector(state => state)
+
   const classes = useStyles();
 
   return (
@@ -44,7 +90,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalDrivers />
+            <TotalDrivers count={state.totalNoOfDrivers} />
           </Grid>
           <Grid
             item
@@ -53,7 +99,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-            <TotalStudents />
+            <TotalConductors count={state.totalNoOfConductors} />           
           </Grid>
           <Grid
             item
@@ -62,7 +108,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-           <TotalConductors />
+            <TotalBuses count={state.totalNoOfBuses} />
           </Grid>
           <Grid
             item
@@ -71,7 +117,7 @@ const Dashboard = () => {
             xl={3}
             xs={12}
           >
-             <TotalTrips />
+            <TotalStudents count={state.totalNoOfStudents} />
           </Grid>
           <Grid
             item
@@ -80,36 +126,8 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            < MapView/>
+            {/* < MapView/> */}
           </Grid>
-          <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <RecentTrips />
-          </Grid>
-          <Grid
-            item
-            lg={4}
-            md={6}
-            xl={3}
-            xs={12}
-          >
-            <TrafficByDevice />
-          </Grid>
-        
-          {/* <Grid
-            item
-            lg={8}
-            md={12}
-            xl={9}
-            xs={12}
-          >
-            <LatestOrders />
-          </Grid> */}
         </Grid>
       </Container>
     </Page>
