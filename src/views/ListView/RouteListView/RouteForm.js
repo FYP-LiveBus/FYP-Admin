@@ -52,29 +52,36 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
   });
 
   
-
   useEffect(() => {
     axios.get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
     .then(response=>{
-      setValues({...values, driversList: response.data});
+      let driverL = response.data;
+        axios.get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
+        .then(response=>{
+          setValues({...values, stops: response.data, driversList: driverL});
+        
+        })
+        .catch(err=>alert(err))
     })
     .catch(err=>alert(err))
   },[])
 
-  useEffect(() => {
-    axios.get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
-    .then(response=>{
-      console.log(response.data)
-      setValues({...values, stops: response.data});
-    })
-    .catch(err=>alert(err))
-  },[])
+  // useEffect(() => {
+    
+  // },[])
 
 
   const handleChange = event => {
     setValues({
       ...values,
       [event.target.name]: event.target.value
+    });
+  };
+
+  const handleDriverChange = event => {
+    setValues({
+      ...values,
+      driver: event.target.value
     });
   };
 
@@ -91,7 +98,7 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
       routeNo: values.routeNo,
       routeName: values.routeName,
       startingPoint: values.startingPoint,
-      stops: values.stops,
+      stops: values.selectiveStops,
       status: values.status,
       // drivers: values.driversList,
       driver: values.driver,
@@ -107,6 +114,8 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
       })
       closeModal()
   }
+
+  console.log(values, "driver")
 
   return (
     <form
@@ -148,7 +157,7 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
               <Select
                 labelId="demo-mutiple-name-label"
                 id="demo-mutiple-name"
-                multiple={true}
+                multiple
                 value={values.selectiveStops}
                 onChange={handleChangeMultiple}
                 input={<Input />}
@@ -186,7 +195,7 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 fullWidth
                 label="Driver"
                 name="driver"
-                onChange={handleChange}
+                onChange={handleDriverChange}
                 required
                 select
                 SelectProps={{ native: true }}

@@ -33,6 +33,7 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
   const dispatch = useDispatch()
   
   const handleLogout = () => {
+    localStorage.removeItem('token');
     dispatch(logOut());
   }
 
@@ -54,9 +55,9 @@ const TopBar = ({ className, onMobileNavOpen, ...rest }) => {
             </Badge>
           </IconButton>
           <IconButton onClick={handleLogout} color="inherit">
-            {/* <RouterLink style={{ color: 'white' }} to="/login"> */}
+            <RouterLink style={{ color: 'white' }} to="/login">
               <InputIcon />
-            {/* </RouterLink> */}
+            </RouterLink>
           </IconButton>
         </Hidden>
         <Hidden lgUp>

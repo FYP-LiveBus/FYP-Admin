@@ -16,7 +16,9 @@ import {
   TablePagination,
   TableRow,
   Typography,
-  makeStyles
+  makeStyles,
+  Select,
+  MenuItem
 } from '@material-ui/core';
 import getInitials from 'src/utils/getInitials';
 import MyModal from 'src/components/modal';
@@ -123,7 +125,7 @@ const Results = ({ className, routes, ...rest }) => {
                   Starting Point
                 </TableCell>
                 <TableCell>
-                  No Of Stops
+                  Stops
                 </TableCell>
                 <TableCell >
                   Driver
@@ -152,23 +154,7 @@ const Results = ({ className, routes, ...rest }) => {
                     />
                   </TableCell>
                   <TableCell>
-                    {/* <Box
-                      alignItems="center"
-                      display="flex"
-                    > */}
-                      {/* <Avatar
-                        className={classes.avatar}
-                        src={route.avatarUrl}
-                      >
-                        {getInitials(route.name)}
-                      </Avatar> */}
-                      {/* <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      > */}
                     {route.routeNo}
-                      {/* </Typography> */}
-                    {/* </Box> */}
                   </TableCell>
                   <TableCell>
                     {route.routeName}
@@ -177,7 +163,22 @@ const Results = ({ className, routes, ...rest }) => {
                     {route.startingPoint}
                   </TableCell>
                   <TableCell>
-                    {route.noOfStops}
+                    <Select
+                      labelId="demo-mutiple-name-label"
+                      id="demo-mutiple-name"
+                      multiple={true}
+                      value={route.stops}
+                      // onChange={handleChangeMultiple}
+                      // input={<Input />}
+                      // MenuProps={MenuProps}
+                      style={{width:"150px"}}
+                    >
+                      {route.stops.map((stop) => (
+                        <MenuItem key={stop} value={stop} >
+                          {stop}
+                        </MenuItem>
+                        ))}
+                    </Select>
                   </TableCell>
                   <TableCell>
                     {route.driver}

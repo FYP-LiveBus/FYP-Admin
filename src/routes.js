@@ -1,5 +1,5 @@
 import React from 'react';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Navigate } from 'react-router-dom';
 import DashboardLayout from 'src/layouts/DashboardLayout';
 import AccountView from 'src/views/account/AccountView';
@@ -20,10 +20,15 @@ import NotFoundView from 'src/views/errors/NotFoundView';
 import FeedBackListView from 'src/views/ListView/FeedBackListView';
 import NotificationListView from './views/ListView/NotificationListView';
 import ProtectedRoute from 'src/components/ProtectedRoute'
+import { login } from 'src/Redux/actions'
 
 export default function Routes() {
   
-  const state = useSelector(s => s)
+  const dispatch = useDispatch()
+  let token = JSON.parse(localStorage.getItem('token'));
+  if(token)
+    dispatch(login(token))
+
   // console.log(state)
   const routes = [
     {
@@ -37,7 +42,7 @@ export default function Routes() {
     },
     {
       path: 'app',
-      element: <ProtectedRoute component={DashboardLayout} login={state.isLoggedIn}/>,
+      element: <ProtectedRoute component={DashboardLayout} login={token?true:false}/>,
       children: [
         { path: 'account', element: <AccountView /> },
         { path: 'students', element: <StudentListView /> },

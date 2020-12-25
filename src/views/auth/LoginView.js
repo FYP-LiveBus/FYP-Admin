@@ -23,6 +23,8 @@ function LoginView () {
     axios.post(URL, {username: username, password: password})
       .then((response)=>{
         let user = response.data;
+        localStorage.setItem('token', JSON.stringify(response.data))
+        
         dispatch(login(user))
         console.log(user)
       })
