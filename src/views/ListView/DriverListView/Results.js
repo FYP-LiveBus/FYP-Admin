@@ -129,15 +129,7 @@ const Results = ({ className, drivers, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedDriverIds.length === drivers.length}
-                    color="primary"
-                    indeterminate={
-                      selectedDriverIds.length > 0
-                      && selectedDriverIds.length < drivers.length
-                    }
-                    onChange={handleSelectAll}
-                  />
+                  
                 </TableCell>
                 <TableCell>
                   Name
@@ -182,12 +174,6 @@ const Results = ({ className, drivers, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
-                        className={classes.avatar}
-                        src={driver.avatarUrl}
-                      >
-                        {getInitials(driver.name)}
-                      </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"

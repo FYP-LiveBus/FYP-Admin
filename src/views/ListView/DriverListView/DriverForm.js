@@ -49,6 +49,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
     phone: '',
     age: '',
     licensenumber: '',
+    email: '',
     city: '',
     profilePicture: ''
   });
@@ -71,6 +72,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
       username: values.username,
       password: values.password,
       phone: values.phone,
+      email: values.email,
       licensenumber: values.licensenumber,
       age: values.age,
       city: values.city,
@@ -131,6 +133,17 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 onChange={handleChange}
                 required
                 value={values.username}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Email"
+                name="email"
+                onChange={handleChange}
+                required
+                value={values.email}
                 variant="outlined"
               />
             </Grid>

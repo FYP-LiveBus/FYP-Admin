@@ -99,7 +99,7 @@ const Results = ({ className, students, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedStudentIds.length === students.length}
                     color="primary"
                     indeterminate={
@@ -107,7 +107,7 @@ const Results = ({ className, students, ...rest }) => {
                       && selectedStudentIds.length < students.length
                     }
                     onChange={handleSelectAll}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   Name

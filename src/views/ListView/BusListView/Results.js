@@ -99,7 +99,7 @@ const Results = ({ className, buses, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedBusIds.length === buses.length}
                     color="primary"
                     indeterminate={
@@ -107,7 +107,7 @@ const Results = ({ className, buses, ...rest }) => {
                       && selectedBusIds.length < buses.length
                     }
                     onChange={handleSelectAll}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   Manufacturer

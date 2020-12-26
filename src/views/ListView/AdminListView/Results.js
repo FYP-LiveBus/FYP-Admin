@@ -99,7 +99,7 @@ const Results = ({ className, admins, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedAdminIds.length === admins.length}
                     color="primary"
                     indeterminate={
@@ -107,7 +107,7 @@ const Results = ({ className, admins, ...rest }) => {
                       && selectedAdminIds.length < admins.length
                     }
                     onChange={handleSelectAll}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   Name
@@ -146,12 +146,12 @@ const Results = ({ className, admins, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
+                      {/* <Avatar
                         className={classes.avatar}
                         src={admin.avatarUrl}
                       >
                         {getInitials(admin.name)}
-                      </Avatar>
+                      </Avatar> */}
                       <Typography
                         color="textPrimary"
                         variant="body1"

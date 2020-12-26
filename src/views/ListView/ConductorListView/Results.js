@@ -100,7 +100,7 @@ const Results = ({ className, conductors, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedConductorIds.length === conductors.length}
                     color="primary"
                     indeterminate={
@@ -108,7 +108,7 @@ const Results = ({ className, conductors, ...rest }) => {
                       && selectedConductorIds.length < conductors.length
                     }
                     onChange={handleSelectAll}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   Name
@@ -150,12 +150,6 @@ const Results = ({ className, conductors, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
-                        className={classes.avatar}
-                        src={conductor.avatarUrl}
-                      >
-                        {getInitials(conductor.name)}
-                      </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"

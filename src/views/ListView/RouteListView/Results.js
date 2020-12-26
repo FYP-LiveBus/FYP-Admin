@@ -105,7 +105,7 @@ const Results = ({ className, routes, ...rest }) => {
             <TableHead>
               <TableRow>
                 <TableCell padding="checkbox">
-                  <Checkbox
+                  {/* <Checkbox
                     checked={selectedRouteIds.length === routes.length}
                     color="primary"
                     indeterminate={
@@ -113,7 +113,7 @@ const Results = ({ className, routes, ...rest }) => {
                       && selectedRouteIds.length < routes.length
                     }
                     onChange={handleSelectAll}
-                  />
+                  /> */}
                 </TableCell>
                 <TableCell>
                   Route No

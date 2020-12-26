@@ -48,7 +48,7 @@ const Dashboard = () => {
   },[]);
 
   useEffect(()=>{
-    axios.get(`https://livebusapi.herokuapp.com/api/admin/students/getTotal`)
+    axios.get(`https://livebusapi.herokuapp.com/api/admin/students/`)
     .then(response => {
       dispatch(countStudents(response.data))
       console.log(response.data)
