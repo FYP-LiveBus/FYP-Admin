@@ -144,12 +144,12 @@ const Results = ({ className, subadmins, ...rest }) => {
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
+                      {/* <Avatar
                         className={classes.avatar}
                         src={subadmin.avatarUrl}
                       >
                         {getInitials(subadmin.name)}
-                      </Avatar>
+                      </Avatar> */}
                       <Typography
                         color="textPrimary"
                         variant="body1"

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   Box,
   Container,
@@ -7,7 +7,7 @@ import {
 import Page from 'src/components/Page';
 import Results from './Results';
 // import Toolbar from './Toolbar';
-import data from './data';
+import {useSelector} from 'react-redux'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -18,10 +18,11 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
+
 const TripListView = () => {
   const classes = useStyles();
-  const [students] = useState(data);
-
+  const state = useSelector(state => state)
+  
   return (
     <Page
       className={classes.root}
@@ -30,7 +31,7 @@ const TripListView = () => {
       <Container maxWidth={false}>
         {/* <Toolbar /> */}
         <Box mt={3}>
-          <Results students={students} />
+          <Results trips={state.trips} />
         </Box>
       </Container>
     </Page>

@@ -26,6 +26,7 @@ export const ADD_STOP = "addStop";
 export const ADD_NOTIFICATION = "addNotification";
 export const VIEW_NOTIFICATION = "viewNotification";
 export const UPDATE_DRIVER = "updateDriver";
+export const VIEW_TRIPS = "viewTrips";
 // export const DELETE_DRIVER = "deleteDriver";
 // export const COMPLETE_PROFILE = "completeProfile";
 export const LOGOUT = "logOut";

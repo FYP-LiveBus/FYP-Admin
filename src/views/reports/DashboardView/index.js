@@ -126,7 +126,7 @@ const Dashboard = () => {
             xl={12}
             xs={12}
           >
-            {/* < MapView/> */}
+            < MapView/>
           </Grid>
         </Grid>
       </Container>

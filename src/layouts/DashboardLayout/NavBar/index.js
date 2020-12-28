@@ -25,7 +25,7 @@ import {
 import NavItem from './NavItem';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { viewBus, viewDriver, viewConductor, viewStudent, viewAdmin, viewSubAdmin, viewRoute, viewStop, viewNotification} from 'src/Redux/actions';
+import { viewBus, viewDriver, viewConductor, viewStudent, viewAdmin, viewSubAdmin, viewRoute, viewStop, viewNotification, viewTrips} from 'src/Redux/actions';
 
 const items = [
   {
@@ -146,7 +146,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const clickHandler = (title) => {
     let t = title.charAt(0).toLowerCase() + title.slice(1)
 
-    if(t === "dashboard" || t === "settings" || t=== "trips" || t === "feedbacks" || t === "account"){}
+    if(t === "dashboard" || t === "settings" || t === "feedbacks" || t === "account"){}
     else if (t === "drivers" || t === "conductors" || t === "buses" || t === "routes" || t === "stops"|| t === "notifications") {
       axios.get(`https://livebusapi.herokuapp.com/api/admin/${t}/`)
       .then(response => {
@@ -169,6 +169,14 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       axios.get(`https://livebusapi.herokuapp.com/api/admin/students/Accept`)
       .then((response)=>{
         dispatch(viewStudent(response.data));
+      })
+      .catch( err=>alert(err) ) 
+    }
+    else if( t=== "trips" ){
+      axios.get(`https://livebusapi.herokuapp.com/api/driver/trips`)
+      .then((response)=>{
+        console.log(response.data);
+        dispatch(viewTrips(response.data));
       })
       .catch( err=>alert(err) ) 
     }

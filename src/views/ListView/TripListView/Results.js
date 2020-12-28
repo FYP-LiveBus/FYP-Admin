@@ -26,42 +26,42 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Results = ({ className, students, ...rest }) => {
+const Results = ({ className, trips, ...rest }) => {
   const classes = useStyles();
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [selectedTripIds, setSelectedTripIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
   const handleSelectAll = (event) => {
-    let newSelectedStudentIds;
+    let newSelectedTripIds;
 
     if (event.target.checked) {
-      newSelectedStudentIds = students.map((student) => student.id);
+      newSelectedTripIds = trips.map((trip) => trip._id);
     } else {
-      newSelectedStudentIds = [];
+      newSelectedTripIds = [];
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedTripIds(newSelectedTripIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedStudentIds.indexOf(id);
-    let newSelectedStudentIds = [];
+    const selectedIndex = selectedTripIds.indexOf(id);
+    let newSelectedTripIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds, id);
+      newSelectedTripIds = newSelectedTripIds.concat(selectedTripIds, id);
     } else if (selectedIndex === 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(1));
-    } else if (selectedIndex === selectedStudentIds.length - 1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(0, -1));
+      newSelectedTripIds = newSelectedTripIds.concat(selectedTripIds.slice(1));
+    } else if (selectedIndex === selectedTripIds.length - 1) {
+      newSelectedTripIds = newSelectedTripIds.concat(selectedTripIds.slice(0, -1));
     } else if (selectedIndex > 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(
-        selectedStudentIds.slice(0, selectedIndex),
-        selectedStudentIds.slice(selectedIndex + 1)
+      newSelectedTripIds = newSelectedTripIds.concat(
+        selectedTripIds.slice(0, selectedIndex),
+        selectedTripIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedTripIds(newSelectedTripIds);
   };
 
   const handleLimitChange = (event) => {
@@ -82,78 +82,55 @@ const Results = ({ className, students, ...rest }) => {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedStudentIds.length === students.length}
-                    color="primary"
-                    indeterminate={
-                      selectedStudentIds.length > 0
-                      && selectedStudentIds.length < students.length
-                    }
-                    onChange={handleSelectAll}
-                  />
+                <TableCell>
+                  Driver
                 </TableCell>
                 <TableCell>
-                  Name
+                  Route No
                 </TableCell>
                 <TableCell>
-                  Email
+                  Starting Stop
                 </TableCell>
                 <TableCell>
-                  Location
+                  Ending Stop
                 </TableCell>
                 <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Registration date
+                  Date
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.slice(0, limit).map((student) => (
+              {trips.slice(0, limit).map((trip) => (
                 <TableRow
                   hover
-                  key={student.id}
-                  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                  key={trip._id}
+                  selected={selectedTripIds.indexOf(trip._id) !== -1}
                 >
-                  <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedStudentIds.indexOf(student.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, student.id)}
-                      value="true"
-                    />
-                  </TableCell>
+                  
                   <TableCell>
                     <Box
                       alignItems="center"
                       display="flex"
                     >
-                      <Avatar
-                        className={classes.avatar}
-                        src={student.avatarUrl}
-                      >
-                        {getInitials(student.name)}
-                      </Avatar>
                       <Typography
                         color="textPrimary"
                         variant="body1"
                       >
-                        {student.name}
+                        {trip.driverName}
                       </Typography>
                     </Box>
                   </TableCell>
                   <TableCell>
-                    {student.email}
+                    {trip.routeNo}
                   </TableCell>
                   <TableCell>
-                    {`${student.address.city}, ${student.address.state}, ${student.address.country}`}
+                    {trip.startingPoint}
                   </TableCell>
                   <TableCell>
-                    {student.phone}
+                    {trip.endingPoint}
                   </TableCell>
                   <TableCell>
-                    {moment(student.createdAt).format('DD/MM/YYYY')}
+                    {trip.date}
                   </TableCell>
                 </TableRow>
               ))}
@@ -163,7 +140,7 @@ const Results = ({ className, students, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={students.length}
+        count={trips.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -176,7 +153,7 @@ const Results = ({ className, students, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  students: PropTypes.array.isRequired
+  trips: PropTypes.array.isRequired
 };
 
 export default Results;

@@ -176,6 +176,13 @@ export const updateDriver = (driver) => ({
     }
 });
 
+export const viewTrips = (trips) => ({
+    type: actions.VIEW_TRIPS,
+    payload: {
+        trips
+    }
+});
+
 
 export const logOut = (user) => ({
     type: actions.LOGOUT,

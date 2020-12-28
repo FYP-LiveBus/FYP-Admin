@@ -17,6 +17,7 @@ const initialState = {
     admins:[],
     subadmins:[],
     notifications: [],
+    trips:[]
 }
 
 const reducer = ( state = initialState, action) => {
@@ -49,6 +50,8 @@ const reducer = ( state = initialState, action) => {
             return {...state, routes: action.payload.routes}
         case actions.VIEW_STOP:
             return {...state, stops: action.payload.stops}    
+        case actions.VIEW_TRIPS:
+            return {...state, trips: action.payload.trips}    
         case actions.ADD_ADMIN:
             return {...state, admins: [...state.admins, action.payload.admin]}
         case actions.ADD_SUBADMIN:
@@ -67,8 +70,6 @@ const reducer = ( state = initialState, action) => {
             return {...state, stops: [...state.stops, action.payload.stop]}
         case actions.ADD_NOTIFICATION:
             return {...state, notifications: [...state.notifications, action.payload.notification]}
-        // case actions.ADD_NOTIFICATION:
-        //     return {...state, notifications: [state.notifications.unshift([action.payload.notification]), ...state.notifications}]
         case actions.VIEW_NOTIFICATION:
             return {...state, notifications: action.payload.notifications.reverse()}
         case actions.UPDATE_DRIVER:
