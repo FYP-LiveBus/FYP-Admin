@@ -100,6 +100,8 @@ const StudentForm = ({ className, closeModal, ...rest }) => {
       password: student.password,  
       phone: student.phone,
       semester: student.semester,
+      registrationNo: student.registrationNo,
+      department: student.department,
       status: "Accept"
     })
       .then(response=>{
@@ -109,7 +111,8 @@ const StudentForm = ({ className, closeModal, ...rest }) => {
         alert("Student add successfully");
       })
       .catch(err=>{
-        alert(err)
+        alert("Student did not add successfully")
+        console.log(err)
       })
   }
 
@@ -203,9 +206,6 @@ const StudentForm = ({ className, closeModal, ...rest }) => {
         </TableBody>
       </Table> 
 
-        
-       
-        
       </PerfectScrollbar>
       <Divider />
       <TablePagination

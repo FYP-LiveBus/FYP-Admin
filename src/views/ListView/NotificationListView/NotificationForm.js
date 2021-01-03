@@ -13,8 +13,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 import axios from 'axios';
-import {useDispatch} from 'react-redux';
-import {addNotification} from 'src/Redux/actions'
+import { useDispatch } from 'react-redux';
+import { addNotification } from 'src/Redux/actions';
 
 const useStyles = makeStyles(() => ({
   root: {}
@@ -34,26 +34,27 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
     });
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
     console.log(values);
-    axios.post("https://livebusapi.herokuapp.com/api/admin/notifications/",
-    {
-      subject: values.subject,
-      message: values.message,
-    })
-      .then(response=>{
-        let notification = response.data
+    axios
+      .post('https://livebusapi.herokuapp.com/api/admin/notifications/', {
+        subject: values.subject,
+        message: values.message,
+        date: values.date
+      })
+      .then(response => {
+        let notification = response.data;
         // alert(response.data);
-        console.log(response.data)
+        console.log(response.data);
         dispatch(addNotification(notification));
       })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-  }
+      .catch(err => {
+        alert(err);
+      });
+    closeModal();
+  };
 
   return (
     <form
@@ -93,16 +94,24 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-        <Button style={{marginRight: 10}} color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
-          <Button color="primary" variant="contained" onClick={()=>saveHandler()}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Send
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 

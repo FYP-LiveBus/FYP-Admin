@@ -13,8 +13,8 @@ import {
   makeStyles
 } from '@material-ui/core';
 import axios from 'axios';
-import {useDispatch} from 'react-redux';
-import {addDriver} from 'src/Redux/actions'
+import { useDispatch } from 'react-redux';
+import { addDriver } from 'src/Redux/actions';
 
 // const states = [
 //   {
@@ -45,9 +45,9 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
     firstname: '',
     lastname: '',
     username: '',
-    password:'',
+    password: '',
     phone: '',
-    age: '',
+    age: 0,
     licensenumber: '',
     email: '',
     city: '',
@@ -61,35 +61,35 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
     });
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
-    console.log(values);
-    axios.post("https://livebusapi.herokuapp.com/api/admin/drivers/",
-    {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      username: values.username,
-      password: values.password,
-      phone: values.phone,
-      email: values.email,
-      licensenumber: values.licensenumber,
-      age: values.age,
-      city: values.city,
-      profilePicture: values.profilePicture,
-    })
-      .then(response=>{
-        let user = response.data
-        alert(response.data);
-        console.log(response.data)
+    // console.log(values);
+    axios
+      .post('https://livebusapi.herokuapp.com/api/admin/drivers/', {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        username: values.username,
+        password: values.password,
+        phone: values.phone,
+        email: values.email,
+        licensenumber: values.licensenumber,
+        age: values.age,
+        city: values.city,
+        profilePicture: values.profilePicture
+      })
+      .then(response => {
+        let user = response.data;
+        // alert(response.data);
+        console.log(response.data);
+        console.log(user.email);
         dispatch(addDriver(user));
       })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-  }
-
+      .catch(err => {
+        alert(err);
+      });
+    closeModal();
+  };
 
   return (
     <form
@@ -182,7 +182,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 value={values.age}
                 variant="outlined"
               />
-            </Grid> 
+            </Grid>
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
@@ -217,16 +217,24 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button style={{marginRight: 10}} color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
-          <Button color="primary" variant="contained" onClick={()=>saveHandler()}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Save details
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 

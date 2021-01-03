@@ -4,7 +4,6 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -18,8 +17,7 @@ import {
   makeStyles,
   Button
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
-import axios from 'axios';
+import axios from 'axios'
 
 const useStyles = makeStyles((theme) => ({
   root: {},

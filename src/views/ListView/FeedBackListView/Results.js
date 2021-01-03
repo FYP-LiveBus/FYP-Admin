@@ -19,52 +19,59 @@ import {
 } from '@material-ui/core';
 import getInitials from 'src/utils/getInitials';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
   }
 }));
 
-const Results = ({ className, students, ...rest }) => {
+const Results = ({ className, feedbacks, ...rest }) => {
   const classes = useStyles();
-  const [selectedStudentIds, setSelectedStudentIds] = useState([]);
+  const [selectedFeedbackIds, setSelectedFeedbackIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
-    let newSelectedStudentIds;
+  const handleSelectAll = event => {
+    let newSelectedFeedbackIds;
 
     if (event.target.checked) {
-      newSelectedStudentIds = students.map((student) => student.id);
+      newSelectedFeedbackIds = feedbacks.map(feedback => feedback._id);
     } else {
-      newSelectedStudentIds = [];
+      newSelectedFeedbackIds = [];
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedFeedbackIds(newSelectedFeedbackIds);
   };
 
   const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedStudentIds.indexOf(id);
-    let newSelectedStudentIds = [];
+    const selectedIndex = selectedFeedbackIds.indexOf(id);
+    let newSelectedFeedbackIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds, id);
+      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+        selectedFeedbackIds,
+        id
+      );
     } else if (selectedIndex === 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(1));
-    } else if (selectedIndex === selectedStudentIds.length - 1) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(selectedStudentIds.slice(0, -1));
+      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+        selectedFeedbackIds.slice(1)
+      );
+    } else if (selectedIndex === selectedFeedbackIds.length - 1) {
+      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+        selectedFeedbackIds.slice(0, -1)
+      );
     } else if (selectedIndex > 0) {
-      newSelectedStudentIds = newSelectedStudentIds.concat(
-        selectedStudentIds.slice(0, selectedIndex),
-        selectedStudentIds.slice(selectedIndex + 1)
+      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+        selectedFeedbackIds.slice(0, selectedIndex),
+        selectedFeedbackIds.slice(selectedIndex + 1)
       );
     }
 
-    setSelectedStudentIds(newSelectedStudentIds);
+    setSelectedFeedbackIds(newSelectedFeedbackIds);
   };
 
-  const handleLimitChange = (event) => {
+  const handleLimitChange = event => {
     setLimit(event.target.value);
   };
 
@@ -73,88 +80,48 @@ const Results = ({ className, students, ...rest }) => {
   };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
         <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  <Checkbox
-                    checked={selectedStudentIds.length === students.length}
-                    color="primary"
-                    indeterminate={
-                      selectedStudentIds.length > 0
-                      && selectedStudentIds.length < students.length
-                    }
-                    onChange={handleSelectAll}
-                  />
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Email
-                </TableCell>
-                <TableCell>
-                  Location
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Registration date
-                </TableCell>
+                <TableCell>Message</TableCell>
+                <TableCell>Rating</TableCell>
+                {/* <TableCell>
+                  Date
+                </TableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
-              {students.slice(0, limit).map((student) => (
+              {feedbacks.slice(0, limit).map(feedback => (
                 <TableRow
                   hover
-                  key={student.id}
-                  selected={selectedStudentIds.indexOf(student.id) !== -1}
+                  key={feedback._id}
+                  selected={selectedFeedbackIds.indexOf(feedback._id) !== -1}
                 >
-                  <TableCell padding="checkbox">
+                  {/* <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedStudentIds.indexOf(student.id) !== -1}
-                      onChange={(event) => handleSelectOne(event, student.id)}
+                      checked={selectedFeedbackIds.indexOf(feedback._id) !== -1}
+                      onChange={event => handleSelectOne(event, feedback._id)}
                       value="true"
                     />
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
+                    {/* <Box alignItems="center" display="flex">
                       <Avatar
                         className={classes.avatar}
-                        src={student.avatarUrl}
+                        src={feedback.avatarUrl}
                       >
-                        {getInitials(student.name)}
+                        {getInitials(feedback.name)}
                       </Avatar>
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
-                        {student.name}
+                      <Typography color="textPrimary" variant="body1">
+                        {feedback.message}
                       </Typography>
-                    </Box>
+                    </Box> */}
+                    {feedback.message}
                   </TableCell>
-                  <TableCell>
-                    {student.email}
-                  </TableCell>
-                  <TableCell>
-                    {`${student.address.city}, ${student.address.state}, ${student.address.country}`}
-                  </TableCell>
-                  <TableCell>
-                    {student.phone}
-                  </TableCell>
-                  <TableCell>
-                    {moment(student.createdAt).format('DD/MM/YYYY')}
-                  </TableCell>
+                  <TableCell>{feedback.rating}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
@@ -163,7 +130,7 @@ const Results = ({ className, students, ...rest }) => {
       </PerfectScrollbar>
       <TablePagination
         component="div"
-        count={students.length}
+        count={feedbacks.length}
         onChangePage={handlePageChange}
         onChangeRowsPerPage={handleLimitChange}
         page={page}
@@ -176,7 +143,7 @@ const Results = ({ className, students, ...rest }) => {
 
 Results.propTypes = {
   className: PropTypes.string,
-  students: PropTypes.array.isRequired
+  feedbacks: PropTypes.array.isRequired
 };
 
 export default Results;

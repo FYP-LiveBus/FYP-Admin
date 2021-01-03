@@ -11,14 +11,14 @@ import {
   Grid,
   TextField,
   makeStyles,
-  Select, 
-  MenuItem, 
-  Input, 
+  Select,
+  MenuItem,
+  Input,
   InputLabel
 } from '@material-ui/core';
-import {useDispatch, useSelector} from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import {addRoute} from 'src/Redux/actions';
+import { addRoute } from 'src/Redux/actions';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,9 +26,9 @@ const MenuProps = {
   PaperProps: {
     style: {
       maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
-      width: 400,
-    },
-  },
+      width: 400
+    }
+  }
 };
 
 const useStyles = makeStyles(() => ({
@@ -36,9 +36,8 @@ const useStyles = makeStyles(() => ({
 }));
 
 const RouteForm = ({ className, closeModal, ...rest }) => {
-
-  // const state = useSelector(state=>state)
   const classes = useStyles();
+
   const [values, setValues] = useState({
     routeNo: '',
     routeName: '',
@@ -46,30 +45,32 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
     endingPoint: 'Comsats',
     stops: [],
     selectiveStops: [],
-    driversList:[],
-    status:'',
-    driver:{}
+    driversList: [],
+    status: '',
+    selectedDriver: {},
+    driver: '',
+    driverID: ''
   });
 
-  
   useEffect(() => {
-    axios.get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
-    .then(response=>{
-      let driverL = response.data;
-        axios.get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
-        .then(response=>{
-          setValues({...values, stops: response.data, driversList: driverL});
-        
-        })
-        .catch(err=>alert(err))
-    })
-    .catch(err=>alert(err))
-  },[])
-
-  // useEffect(() => {
-    
-  // },[])
-
+    axios
+      .get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
+      .then(response => {
+        let driverL = [{}, ...response.data];
+        axios
+          .get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
+          .then(response => {
+            let st = ['', ...response.data];
+            setValues({
+              ...values,
+              stops: st,
+              driversList: driverL
+            });
+          })
+          .catch(err => alert(err));
+      })
+      .catch(err => alert(err));
+  }, []);
 
   const handleChange = event => {
     setValues({
@@ -81,42 +82,43 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
   const handleDriverChange = event => {
     setValues({
       ...values,
-      driver: event.target.value
+      selectedDriver: event.target.value
     });
   };
 
-  const handleChangeMultiple = (event) => {
-    setValues({...values, selectiveStops: event.target.value});
+  const handleChangeMultiple = event => {
+    setValues({ ...values, selectiveStops: event.target.value });
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
     console.log(values);
-    axios.post("https://livebusapi.herokuapp.com/api/admin/routes",
-    {
-      routeNo: values.routeNo,
-      routeName: values.routeName,
-      startingPoint: values.startingPoint,
-      stops: values.selectiveStops,
-      status: values.status,
-      // drivers: values.driversList,
-      driver: values.driver,
-    })
-      .then(response=>{
-        let route = response.data
-        // alert(response.data);
-        console.log(response.data)
+    axios
+      .post('https://livebusapi.herokuapp.com/api/admin/routes', {
+        routeNo: values.routeNo,
+        routeName: values.routeName,
+        startingPoint: values.startingPoint,
+        stops: values.selectiveStops,
+        status: values.status,
+        driver: values.selectedDriver.username,
+        driverID: values.selectedDriver.driverID
+      })
+      .then(response => {
+        let route = response.data;
+        alert(JSON.stringify(response.data));
+        console.log(response.data);
         dispatch(addRoute(route));
       })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-  }
-
-  console.log(values, "driver")
-
+      .catch(err => {
+        alert(err);
+      });
+    closeModal();
+  };
+  // console.log(values.driversList);
+  console.log(values.selectedDriver);
+  // console.log(values.selectedDriver.username);
+  // console.log(values.selectedDriver.driverID);
   return (
     <form
       autoComplete="off"
@@ -153,19 +155,20 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
               />
             </Grid>
             <Grid item md={6} xs={12}>
-            <InputLabel id="demo-mutiple-name-label">Stops</InputLabel>
+              <InputLabel id="demo-mutiple-name-label">Stops</InputLabel>
               <Select
                 labelId="demo-mutiple-name-label"
                 id="demo-mutiple-name"
                 multiple
                 value={values.selectiveStops}
+                name="selectiveStops"
                 onChange={handleChangeMultiple}
                 input={<Input />}
                 MenuProps={MenuProps}
-                style={{width:"400px"}}
+                style={{ width: '400px' }}
               >
-                {values.stops.map((stop) => (
-                  <MenuItem key={stop.stopName} value={stop.stopName} >
+                {values.stops.map(stop => (
+                  <MenuItem key={stop.stopName} value={stop.stopName}>
                     {stop.stopName}
                   </MenuItem>
                 ))}
@@ -203,8 +206,11 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 variant="outlined"
               >
                 {values.driversList.map(dr => (
-                  <option key={dr._id} value={dr.username}>
-                    {`${dr.firstname} ${dr.lastname}`}
+                  <option key={dr._id} value={JSON.stringify(dr)}>
+                    {dr.firstname ? dr.firstname : ''}
+                    {''}
+                    {dr.lastname ? dr.lastname : ''}
+                    {/* {`${dr.firstname} ${dr.lastname}`} */}
                   </option>
                 ))}
               </TextField>
@@ -227,21 +233,29 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                   </option>
                 ))} */}
               </TextField>
-              </Grid>
+            </Grid>
           </Grid>
         </CardContent>
         <Divider />
-        <Box display="flex" justifyContent="flex-end" p={2}> 
-          <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
+        <Box display="flex" justifyContent="flex-end" p={2}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Save details
           </Button>
-          <Button color="secondary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            color="secondary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 
