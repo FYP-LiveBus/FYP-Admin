@@ -13,6 +13,7 @@ import {
   colors
 } from '@material-ui/core';
 import InsertChartIcon from '@material-ui/icons/InsertChartOutlined';
+import Axios from 'axios';
 
 const useStyles = makeStyles(() => ({
   root: {
@@ -27,31 +28,30 @@ const useStyles = makeStyles(() => ({
 
 const TotalTrips = ({ className, ...rest }) => {
   const classes = useStyles();
+  const [countTrips, setCountTrips] = React.useState(0);
+
+  React.useEffect(() => {
+    Axios.get(`https://livebusapi.herokuapp.com/api/student/trips/count`)
+      .then(response => {
+        setCountTrips(response.data);
+      })
+      .catch(error => {
+        console.log(error);
+        alert(error);
+      });
+  }, []);
+  // alert(countTrips);
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <CardContent>
-        <Grid
-          container
-          justify="space-between"
-          spacing={3}
-        >
+        <Grid container justify="space-between" spacing={3}>
           <Grid item>
-            <Typography
-              color="textSecondary"
-              gutterBottom
-              variant="h6"
-            >
+            <Typography color="textSecondary" gutterBottom variant="h6">
               TRIPS
             </Typography>
-            <Typography
-              color="textPrimary"
-              variant="h3"
-            >
-              400
+            <Typography color="textPrimary" variant="h3">
+              {countTrips}
             </Typography>
           </Grid>
           <Grid item>

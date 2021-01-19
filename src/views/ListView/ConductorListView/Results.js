@@ -1,14 +1,13 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
+// import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Button,
   Card,
-  Checkbox,
+  // Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -18,55 +17,64 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 import axios from 'axios';
+import { deleteConductor } from 'src/Redux/actions';
+import { useDispatch } from 'react-redux';
+import MyUpdateModal from 'src/components/updateModal';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
   }
 }));
 
-const Results = ({ className, conductors, ...rest }) => {
+const Results = ({ className, conductors, flag, data, index, ...rest }) => {
   const classes = useStyles();
   const [selectedConductorIds, setSelectedConductorIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
-    let newSelectedConductorIds;
+  // const handleSelectAll = event => {
+  //   let newSelectedConductorIds;
 
-    if (event.target.checked) {
-      newSelectedConductorIds = conductors.map((conductor) => conductor.id);
-    } else {
-      newSelectedConductorIds = [];
-    }
+  //   if (event.target.checked) {
+  //     newSelectedConductorIds = conductors.map(conductor => conductor.id);
+  //   } else {
+  //     newSelectedConductorIds = [];
+  //   }
 
-    setSelectedConductorIds(newSelectedConductorIds);
-  };
+  //   setSelectedConductorIds(newSelectedConductorIds);
+  // };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedConductorIds.indexOf(id);
-    let newSelectedConductorIds = [];
+  // const handleSelectOne = (event, id) => {
+  //   const selectedIndex = selectedConductorIds.indexOf(id);
+  //   let newSelectedConductorIds = [];
 
-    if (selectedIndex === -1) {
-      newSelectedConductorIds = newSelectedConductorIds.concat(selectedConductorIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedConductorIds = newSelectedConductorIds.concat(selectedConductorIds.slice(1));
-    } else if (selectedIndex === selectedConductorIds.length - 1) {
-      newSelectedConductorIds = newSelectedConductorIds.concat(selectedConductorIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedConductorIds = newSelectedConductorIds.concat(
-        selectedConductorIds.slice(0, selectedIndex),
-        selectedConductorIds.slice(selectedIndex + 1)
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelectedConductorIds = newSelectedConductorIds.concat(
+  //       selectedConductorIds,
+  //       id
+  //     );
+  //   } else if (selectedIndex === 0) {
+  //     newSelectedConductorIds = newSelectedConductorIds.concat(
+  //       selectedConductorIds.slice(1)
+  //     );
+  //   } else if (selectedIndex === selectedConductorIds.length - 1) {
+  //     newSelectedConductorIds = newSelectedConductorIds.concat(
+  //       selectedConductorIds.slice(0, -1)
+  //     );
+  //   } else if (selectedIndex > 0) {
+  //     newSelectedConductorIds = newSelectedConductorIds.concat(
+  //       selectedConductorIds.slice(0, selectedIndex),
+  //       selectedConductorIds.slice(selectedIndex + 1)
+  //     );
+  //   }
 
-    setSelectedConductorIds(newSelectedConductorIds);
-  };
+  //   setSelectedConductorIds(newSelectedConductorIds);
+  // };
 
-  const handleLimitChange = (event) => {
+  const handleLimitChange = event => {
     setLimit(event.target.value);
   };
 
@@ -74,107 +82,82 @@ const Results = ({ className, conductors, ...rest }) => {
     setPage(newPage);
   };
 
-  const handleDelete = (id) => {
-    alert(id)
-    axios.delete(`https://livebusapi.herokuapp.com/api/admin/conductors/${id}/`)
-     .then(response => {
-       alert("Conductor deleted successfully")
-       console.log(response.data)
-        // dispatch(viewConductor(response.data));
-       })
-     .catch(err => {
-       alert("In Catch")
-       alert(err)
-     });
-  }
+  const dispatch = useDispatch();
 
+  const handleDelete = id => {
+    // alert(id);
+    axios
+      .delete(`https://livebusapi.herokuapp.com/api/admin/conductors/${id}/`)
+      .then(response => {
+        alert('Conductor deleted successfully');
+        dispatch(deleteConductor(response.data));
+      })
+      .catch(err => {
+        alert('In Catch');
+        alert(err);
+      });
+  };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
         <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  {/* <Checkbox
-                    checked={selectedConductorIds.length === conductors.length}
-                    color="primary"
-                    indeterminate={
-                      selectedConductorIds.length > 0
-                      && selectedConductorIds.length < conductors.length
-                    }
-                    onChange={handleSelectAll}
-                  /> */}
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Username
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Age
-                </TableCell>
-                <TableCell>
-                  City
-                </TableCell>
-                <TableCell>
-                </TableCell>
-                <TableCell>
-                </TableCell>
+                {/* <TableCell padding="checkbox"></TableCell> */}
+                <TableCell>Name</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Age</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {conductors.slice(0, limit).map((conductor) => (
+              {conductors.slice(0, limit).map((conductor, index) => (
                 <TableRow
                   hover
                   key={conductor._id}
                   selected={selectedConductorIds.indexOf(conductor._id) !== -1}
                 >
-                  <TableCell padding="checkbox">
+                  {/* <TableCell padding="checkbox">
                     <Checkbox
-                      checked={selectedConductorIds.indexOf(conductor._id) !== -1}
-                      onChange={(event) => handleSelectOne(event, conductor._id)}
+                      checked={
+                        selectedConductorIds.indexOf(conductor._id) !== -1
+                      }
+                      onChange={event => handleSelectOne(event, conductor._id)}
                       value="true"
                     />
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
+                    <Box alignItems="center" display="flex">
+                      <Typography color="textPrimary" variant="body1">
                         {`${conductor.firstname} ${conductor.lastname}`}
                       </Typography>
                     </Box>
                   </TableCell>
+                  <TableCell>{conductor.username}</TableCell>
+                  <TableCell>{conductor.phone}</TableCell>
+                  <TableCell>{conductor.age}</TableCell>
+                  <TableCell>{conductor.city}</TableCell>
                   <TableCell>
-                    {conductor.username}
+                    <MyUpdateModal
+                      case={'C'}
+                      name={'Conductor'}
+                      data={conductor}
+                      index={index}
+                    />
                   </TableCell>
                   <TableCell>
-                    {conductor.phone}
-                  </TableCell>
-                  <TableCell>
-                    {conductor.age}
-                  </TableCell>
-                  <TableCell>
-                    {conductor.city}
-                  </TableCell>
-                  <TableCell>
-                    <Button variant="contained" color="primary">Edit</Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={()=>handleDelete(conductor._id)} variant="contained" color="secondary">Delete</Button>
+                    <Button
+                      onClick={() => handleDelete(conductor._id)}
+                      variant="contained"
+                      color="secondary"
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                   {/* <TableCell>
                     {moment(conductor.createdAt).format('DD/MM/YYYY')}

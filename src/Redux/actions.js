@@ -175,17 +175,122 @@ export const viewFeedback = feedbacks => ({
   }
 });
 
-export const updateDriver = driver => ({
-  type: actions.UPDATE_DRIVER,
+export const viewTrips = trips => ({
+  type: actions.VIEW_TRIPS,
+  payload: {
+    trips
+  }
+});
+
+export const editBus = (bus, index) => ({
+  type: actions.EDIT_BUS,
+  payload: {
+    bus,
+    index
+  }
+});
+
+export const editDriver = (driver, index) => ({
+  type: actions.EDIT_DRIVER,
+  payload: {
+    driver,
+    index
+  }
+});
+
+export const editConductor = (conductor, index) => ({
+  type: actions.EDIT_CONDUCTOR,
+  payload: {
+    conductor,
+    index
+  }
+});
+
+export const editRoute = (route, index) => ({
+  type: actions.EDIT_ROUTE,
+  payload: {
+    route,
+    index
+  }
+});
+
+export const editStop = (stop, index) => ({
+  type: actions.EDIT_STOP,
+  payload: {
+    stop,
+    index
+  }
+});
+
+export const editAdmin = (admin, index) => ({
+  type: actions.EDIT_ADMIN,
+  payload: {
+    admin,
+    index
+  }
+});
+
+export const editSubAdmin = (subadmin, index) => ({
+  type: actions.EDIT_SUBADMIN,
+  payload: {
+    subadmin,
+    index
+  }
+});
+
+export const deleteBus = bus => ({
+  type: actions.DELETE_BUS,
+  payload: {
+    bus
+  }
+});
+
+export const deleteStudent = student => ({
+  type: actions.DELETE_STUDENT,
+  payload: {
+    student
+  }
+});
+
+export const deleteDriver = driver => ({
+  type: actions.DELETE_DRIVER,
   payload: {
     driver
   }
 });
 
-export const viewTrips = trips => ({
-  type: actions.VIEW_TRIPS,
+export const deleteConductor = conductor => ({
+  type: actions.DELETE_CONDUCTOR,
   payload: {
-    trips
+    conductor
+  }
+});
+
+export const deleteRoute = route => ({
+  type: actions.DELETE_ROUTE,
+  payload: {
+    route
+  }
+});
+
+export const deleteStop = stop => ({
+  type: actions.DELETE_STOP,
+  payload: {
+    stop
+  }
+});
+
+export const deleteAdmin = admin => ({
+  type: actions.DELETE_ADMIN,
+  payload: {
+    admin
+  }
+});
+
+export const deleteSubAdmin = subadmin => ({
+  type: actions.DELETE_SUBADMIN,
+  payload: {
+    subadmin
   }
 });
 

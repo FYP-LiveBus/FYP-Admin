@@ -4,20 +4,20 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
+  // Avatar,
   Box,
   Card,
-  Checkbox,
+  // Checkbox,
   Table,
   TableBody,
   TableCell,
   TableHead,
   TablePagination,
   TableRow,
-  Typography,
+  // Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
+// import getInitials from 'src/utils/getInitials';
 
 const useStyles = makeStyles(theme => ({
   root: {},
@@ -32,44 +32,44 @@ const Results = ({ className, feedbacks, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = event => {
-    let newSelectedFeedbackIds;
+  // const handleSelectAll = event => {
+  //   let newSelectedFeedbackIds;
 
-    if (event.target.checked) {
-      newSelectedFeedbackIds = feedbacks.map(feedback => feedback._id);
-    } else {
-      newSelectedFeedbackIds = [];
-    }
+  //   if (event.target.checked) {
+  //     newSelectedFeedbackIds = feedbacks.map(feedback => feedback._id);
+  //   } else {
+  //     newSelectedFeedbackIds = [];
+  //   }
 
-    setSelectedFeedbackIds(newSelectedFeedbackIds);
-  };
+  //   setSelectedFeedbackIds(newSelectedFeedbackIds);
+  // };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedFeedbackIds.indexOf(id);
-    let newSelectedFeedbackIds = [];
+  // const handleSelectOne = (event, id) => {
+  //   const selectedIndex = selectedFeedbackIds.indexOf(id);
+  //   let newSelectedFeedbackIds = [];
 
-    if (selectedIndex === -1) {
-      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
-        selectedFeedbackIds,
-        id
-      );
-    } else if (selectedIndex === 0) {
-      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
-        selectedFeedbackIds.slice(1)
-      );
-    } else if (selectedIndex === selectedFeedbackIds.length - 1) {
-      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
-        selectedFeedbackIds.slice(0, -1)
-      );
-    } else if (selectedIndex > 0) {
-      newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
-        selectedFeedbackIds.slice(0, selectedIndex),
-        selectedFeedbackIds.slice(selectedIndex + 1)
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+  //       selectedFeedbackIds,
+  //       id
+  //     );
+  //   } else if (selectedIndex === 0) {
+  //     newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+  //       selectedFeedbackIds.slice(1)
+  //     );
+  //   } else if (selectedIndex === selectedFeedbackIds.length - 1) {
+  //     newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+  //       selectedFeedbackIds.slice(0, -1)
+  //     );
+  //   } else if (selectedIndex > 0) {
+  //     newSelectedFeedbackIds = newSelectedFeedbackIds.concat(
+  //       selectedFeedbackIds.slice(0, selectedIndex),
+  //       selectedFeedbackIds.slice(selectedIndex + 1)
+  //     );
+  //   }
 
-    setSelectedFeedbackIds(newSelectedFeedbackIds);
-  };
+  //   setSelectedFeedbackIds(newSelectedFeedbackIds);
+  // };
 
   const handleLimitChange = event => {
     setLimit(event.target.value);
@@ -88,9 +88,7 @@ const Results = ({ className, feedbacks, ...rest }) => {
               <TableRow>
                 <TableCell>Message</TableCell>
                 <TableCell>Rating</TableCell>
-                {/* <TableCell>
-                  Date
-                </TableCell> */}
+                <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -98,30 +96,11 @@ const Results = ({ className, feedbacks, ...rest }) => {
                 <TableRow
                   hover
                   key={feedback._id}
-                  selected={selectedFeedbackIds.indexOf(feedback._id) !== -1}
+                  // selected={selectedFeedbackIds.indexOf(feedback._id) !== -1}
                 >
-                  {/* <TableCell padding="checkbox">
-                    <Checkbox
-                      checked={selectedFeedbackIds.indexOf(feedback._id) !== -1}
-                      onChange={event => handleSelectOne(event, feedback._id)}
-                      value="true"
-                    />
-                  </TableCell> */}
-                  <TableCell>
-                    {/* <Box alignItems="center" display="flex">
-                      <Avatar
-                        className={classes.avatar}
-                        src={feedback.avatarUrl}
-                      >
-                        {getInitials(feedback.name)}
-                      </Avatar>
-                      <Typography color="textPrimary" variant="body1">
-                        {feedback.message}
-                      </Typography>
-                    </Box> */}
-                    {feedback.message}
-                  </TableCell>
+                  <TableCell>{feedback.message}</TableCell>
                   <TableCell>{feedback.rating}</TableCell>
+                  <TableCell>{feedback.created_at}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

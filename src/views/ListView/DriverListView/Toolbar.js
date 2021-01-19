@@ -9,12 +9,12 @@ import {
   TextField,
   InputAdornment,
   SvgIcon,
-  makeStyles,
+  makeStyles
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 import MyModal from 'src/components/modal';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   importButton: {
     marginRight: theme.spacing(1)
@@ -24,34 +24,52 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, setSearchDriver, dataDriver, ...rest }) => {
   const classes = useStyles();
 
+  const handleSearch = event => {
+    if (event.target.value == '') {
+      setSearchDriver(dataDriver);
+    } else {
+      const res = dataDriver.filter(driver => {
+        if (
+          driver.firstname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return driver;
+        else if (
+          driver.lastname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return driver;
+        else if (
+          driver.username
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return driver;
+      });
+      setSearchDriver(res);
+    }
+  };
+
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <MyModal case={'D'} name={"Driver"}/>
-      <Box
-        display="flex"
-        justifyContent="flex-end"
-      > 
-      </Box>
+    <div className={clsx(classes.root, className)} {...rest}>
+      <MyModal case={'D'} name={'Driver'} />
+      <Box display="flex" justifyContent="flex-end"></Box>
       <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
               <TextField
                 fullWidth
+                onChange={handleSearch}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
+                      <SvgIcon fontSize="small" color="action">
                         <SearchIcon />
                       </SvgIcon>
                     </InputAdornment>

@@ -81,7 +81,7 @@ const reducer = (state = initialState, action) => {
     case actions.ADD_NOTIFICATION:
       return {
         ...state,
-        notifications: [...state.notifications, action.payload.notification]
+        notifications: [action.payload.notification, ...state.notifications]
       };
     case actions.VIEW_NOTIFICATION:
       return {
@@ -90,8 +90,75 @@ const reducer = (state = initialState, action) => {
       };
     case actions.VIEW_FEEDBACK:
       return { ...state, feedbacks: action.payload.feedbacks };
-    case actions.UPDATE_DRIVER:
-      return { ...state, drivers: [...state.drivers, action.payload.driver] };
+    case actions.EDIT_BUS:
+      state.bus[action.payload.index] = action.payload.bus;
+      return { ...state };
+    case actions.EDIT_DRIVER:
+      state.drivers[action.payload.index] = action.payload.driver;
+      return { ...state };
+    case actions.EDIT_CONDUCTOR:
+      state.conductors[action.payload.index] = action.payload.conductor;
+      return { ...state };
+    case actions.EDIT_ROUTE:
+      state.routes[action.payload.index] = action.payload.route;
+      return { ...state };
+    case actions.EDIT_STOP:
+      state.stops[action.payload.index] = action.payload.stop;
+      return { ...state };
+    case actions.EDIT_ADMIN:
+      state.admins[action.payload.index] = action.payload.admin;
+      return { ...state };
+    case actions.EDIT_SUBADMIN:
+      state.subadmins[action.payload.index] = action.payload.subadmin;
+      return { ...state };
+
+    case actions.DELETE_BUS:
+      return {
+        ...state,
+        bus: state.bus.filter(b => b._id !== action.payload.bus._id)
+      };
+    case actions.DELETE_STUDENT:
+      return {
+        ...state,
+        students: state.students.filter(
+          s => s._id !== action.payload.student._id
+        )
+      };
+    case actions.DELETE_DRIVER:
+      return {
+        ...state,
+        drivers: state.drivers.filter(d => d._id !== action.payload.driver._id)
+      };
+    case actions.DELETE_CONDUCTOR:
+      return {
+        ...state,
+        conductors: state.conductors.filter(
+          c => c._id !== action.payload.conductor._id
+        )
+      };
+    case actions.DELETE_ROUTE:
+      return {
+        ...state,
+        routes: state.routes.filter(r => r._id !== action.payload.route._id)
+      };
+    case actions.DELETE_STOP:
+      return {
+        ...state,
+        stops: state.stops.filter(s => s._id !== action.payload.stop._id)
+      };
+    case actions.DELETE_ADMIN:
+      return {
+        ...state,
+        admins: state.admins.filter(a => a._id !== action.payload.admin._id)
+      };
+    case actions.DELETE_SUBADMIN:
+      return {
+        ...state,
+        subadmins: state.subadmins.filter(
+          s => s._id !== action.payload.subadmin._id
+        )
+      };
+
     case actions.LOGOUT:
       return { ...state, user: {}, isLoggedIn: false };
     default:

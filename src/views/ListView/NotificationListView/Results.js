@@ -14,7 +14,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
@@ -27,11 +27,13 @@ const Results = ({ className, notifications, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
+  const handleSelectAll = event => {
     let newSelectedNotificationIds;
 
     if (event.target.checked) {
-      newSelectedNotificationIds = notifications.map((notification) => notification._id);
+      newSelectedNotificationIds = notifications.map(
+        notification => notification._id
+      );
     } else {
       newSelectedNotificationIds = [];
     }
@@ -44,11 +46,18 @@ const Results = ({ className, notifications, ...rest }) => {
     let newSelectedNotificationIds = [];
 
     if (selectedIndex === -1) {
-      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds, id);
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(
+        selectedNotificationIds,
+        id
+      );
     } else if (selectedIndex === 0) {
-      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds.slice(1));
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(
+        selectedNotificationIds.slice(1)
+      );
     } else if (selectedIndex === selectedNotificationIds.length - 1) {
-      newSelectedNotificationIds = newSelectedNotificationIds.concat(selectedNotificationIds.slice(0, -1));
+      newSelectedNotificationIds = newSelectedNotificationIds.concat(
+        selectedNotificationIds.slice(0, -1)
+      );
     } else if (selectedIndex > 0) {
       newSelectedNotificationIds = newSelectedNotificationIds.concat(
         selectedNotificationIds.slice(0, selectedIndex),
@@ -59,7 +68,7 @@ const Results = ({ className, notifications, ...rest }) => {
     setSelectedNotificationIds(newSelectedNotificationIds);
   };
 
-  const handleLimitChange = (event) => {
+  const handleLimitChange = event => {
     setLimit(event.target.value);
   };
 
@@ -68,43 +77,30 @@ const Results = ({ className, notifications, ...rest }) => {
   };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
         <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
-             
-                <TableCell>
-                  Subject
-                </TableCell>
-                <TableCell>
-                  Message
-                </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
-
+                <TableCell>Subject</TableCell>
+                <TableCell>Message</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {notifications.slice(0, limit).map((notification) => (
+              {notifications.slice(0, limit).map(notification => (
                 <TableRow
                   hover
                   key={notification._id}
-                  selected={selectedNotificationIds.indexOf(notification._id) !== -1}
-                >                  
+                  selected={
+                    selectedNotificationIds.indexOf(notification._id) !== -1
+                  }
+                >
+                  <TableCell>{notification.subject}</TableCell>
+                  <TableCell>{notification.message}</TableCell>
                   <TableCell>
-                    {notification.subject}
-                  </TableCell>
-                  <TableCell>
-                    {notification.message}
-                  </TableCell>
-                  <TableCell>
-                    {notification.created_at}
+                    {notification.date}
                     {/* {moment(notification.createdAt).format('DD/MM/YYYY')} */}
                   </TableCell>
                 </TableRow>

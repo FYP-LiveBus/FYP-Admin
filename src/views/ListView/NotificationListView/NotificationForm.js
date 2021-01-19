@@ -41,8 +41,7 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
     axios
       .post('https://livebusapi.herokuapp.com/api/admin/notifications/', {
         subject: values.subject,
-        message: values.message,
-        date: values.date
+        message: values.message
       })
       .then(response => {
         let notification = response.data;
@@ -55,6 +54,8 @@ const NotificationForm = ({ className, closeModal, ...rest }) => {
       });
     closeModal();
   };
+
+  //////////////////////213123123123123kj12lk3jl21j3lnj12l3j12lj3l12nj312k
 
   return (
     <form

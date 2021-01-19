@@ -24,10 +24,27 @@ export const ADD_BUS = 'addBus';
 export const ADD_ROUTE = 'addRoute';
 export const ADD_STOP = 'addStop';
 export const ADD_NOTIFICATION = 'addNotification';
+
 export const VIEW_NOTIFICATION = 'viewNotification';
 export const VIEW_FEEDBACK = 'viewFeedback';
-export const UPDATE_DRIVER = 'updateDriver';
 export const VIEW_TRIPS = 'viewTrips';
-// export const DELETE_DRIVER = "deleteDriver";
+
+export const EDIT_DRIVER = 'editDriver';
+export const EDIT_CONDUCTOR = 'editConductor';
+export const EDIT_ROUTE = 'editRoute';
+export const EDIT_STOP = 'editStop';
+export const EDIT_BUS = 'editBus';
+export const EDIT_ADMIN = 'editAdmin';
+export const EDIT_SUBADMIN = 'editSubAdmin';
+
+export const DELETE_STUDENT = 'deleteStudent';
+export const DELETE_DRIVER = 'deleteDriver';
+export const DELETE_CONDUCTOR = 'deleteConductor';
+export const DELETE_ROUTE = 'deleteRoute';
+export const DELETE_STOP = 'deleteStop';
+export const DELETE_BUS = 'deleteBus';
+export const DELETE_ADMIN = 'deleteAdmin';
+export const DELETE_SUBADMIN = 'deleteSubAdmin';
+
 // export const COMPLETE_PROFILE = "completeProfile";
 export const LOGOUT = 'logOut';

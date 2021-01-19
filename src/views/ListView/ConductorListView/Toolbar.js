@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
-  Button,
+  // Button,
   Card,
   CardContent,
   TextField,
@@ -14,7 +14,7 @@ import {
 import MyModal from 'src/components/modal';
 import { Search as SearchIcon } from 'react-feather';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   importButton: {
     marginRight: theme.spacing(1)
@@ -24,34 +24,51 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// const handler = () => {
-//   <Box mt={3}>
-//     <Form />
-//   </Box>
-// }
-
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, setSearchConductor, dataConductor, ...rest }) => {
   const classes = useStyles();
 
+  const handleSearch = event => {
+    if (event.target.value == '') {
+      setSearchConductor(dataConductor);
+    } else {
+      const res = dataConductor.filter(conductor => {
+        if (
+          conductor.firstname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return conductor;
+        else if (
+          conductor.lastname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return conductor;
+        else if (
+          conductor.username
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return conductor;
+      });
+      setSearchConductor(res);
+    }
+  };
+
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <MyModal case={'C'} name={"Conductor"}/>
+    <div className={clsx(classes.root, className)} {...rest}>
+      <MyModal case={'C'} name={'Conductor'} />
       <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
               <TextField
                 fullWidth
+                onChange={handleSearch}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
+                      <SvgIcon fontSize="small" color="action">
                         <SearchIcon />
                       </SvgIcon>
                     </InputAdornment>

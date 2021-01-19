@@ -21,7 +21,7 @@ const FeedBackListView = () => {
   // const [students] = useState(data);
 
   return (
-    <Page className={classes.root} title="Trips">
+    <Page className={classes.root} title="Feedbacks">
       <Container maxWidth={false}>
         {/* <Toolbar /> */}
         <Box mt={3}>

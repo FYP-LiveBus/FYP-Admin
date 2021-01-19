@@ -1,16 +1,11 @@
-import React from 'react';
-import {
-  Box,
-  Container,
-  makeStyles
-} from '@material-ui/core';
+import React, { useState, useEffect } from 'react';
+import { Box, Container, makeStyles } from '@material-ui/core';
 import Page from 'src/components/Page';
 import Results from './Results';
 import Toolbar from './Toolbar';
-import {useSelector} from 'react-redux'
-// import data from './data';
+import { useSelector } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
     backgroundColor: theme.palette.background.dark,
     minHeight: '100%',
@@ -21,16 +16,19 @@ const useStyles = makeStyles((theme) => ({
 
 const AdminListView = () => {
   const classes = useStyles();
-  const state = useSelector(state => state)
+  const state = useSelector(state => state);
+
+  const [searchAdmin, setSearchAdmin] = useState(state.admins);
+  useEffect(() => {
+    setSearchAdmin(state.admins);
+  }, [state.admins]);
+
   return (
-    <Page
-      className={classes.root}
-      title="Admin"
-    >
+    <Page className={classes.root} title="Admin">
       <Container maxWidth={false}>
-        <Toolbar />
+        <Toolbar setSearchAdmin={setSearchAdmin} dataAdmin={state.admins} />
         <Box mt={3}>
-          <Results admins={state.admins} />
+          <Results admins={searchAdmin} />
         </Box>
       </Container>
     </Page>

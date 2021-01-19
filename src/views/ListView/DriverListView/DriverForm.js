@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -14,32 +14,13 @@ import {
 } from '@material-ui/core';
 import axios from 'axios';
 import { useDispatch } from 'react-redux';
-import { addDriver } from 'src/Redux/actions';
-
-// const states = [
-//   {
-//     value: '',
-//     label: ''
-//   },
-//   {
-//     value: 'Lahore',
-//     label: 'Lahore'
-//   },
-//   {
-//     value: 'Karachi',
-//     label: 'Karachi'
-//   },
-//   {
-//     value: 'Islamabad',
-//     label: 'Islamabad'
-//   }
-// ];
+import { addDriver, editDriver } from 'src/Redux/actions';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const DriverForm = ({ className, closeModal, ...rest }) => {
+const DriverForm = ({ className, closeModal, flag, data, index, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     firstname: '',
@@ -54,6 +35,10 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
     profilePicture: ''
   });
 
+  useEffect(() => {
+    if (data) setValues(data);
+  }, []);
+
   const handleChange = event => {
     setValues({
       ...values,
@@ -64,30 +49,56 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
   const dispatch = useDispatch();
 
   const saveHandler = () => {
-    // console.log(values);
-    axios
-      .post('https://livebusapi.herokuapp.com/api/admin/drivers/', {
-        firstname: values.firstname,
-        lastname: values.lastname,
-        username: values.username,
-        password: values.password,
-        phone: values.phone,
-        email: values.email,
-        licensenumber: values.licensenumber,
-        age: values.age,
-        city: values.city,
-        profilePicture: values.profilePicture
-      })
-      .then(response => {
-        let user = response.data;
-        // alert(response.data);
-        console.log(response.data);
-        console.log(user.email);
-        dispatch(addDriver(user));
-      })
-      .catch(err => {
-        alert(err);
-      });
+    console.log(values);
+
+    if (flag && flag == 'edit') {
+      axios
+        .put(`https://livebusapi.herokuapp.com/api/admin/drivers/${data._id}`, {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          username: values.username,
+          password: values.password,
+          phone: values.phone,
+          email: values.email,
+          licensenumber: values.licensenumber,
+          age: values.age,
+          city: values.city,
+          profilePicture: values.profilePicture
+        })
+        .then(response => {
+          const user = response.data;
+          alert('Driver Updated successfully');
+          dispatch(editDriver(user, index));
+          // alert(JSON.stringify(response.data));
+        })
+        .catch(err => {
+          alert(err + 'check');
+        });
+    } else {
+      axios
+        .post('https://livebusapi.herokuapp.com/api/admin/drivers/', {
+          firstname: values.firstname,
+          lastname: values.lastname,
+          username: values.username,
+          password: values.password,
+          phone: values.phone,
+          email: values.email,
+          licensenumber: values.licensenumber,
+          age: values.age,
+          city: values.city,
+          profilePicture: values.profilePicture
+        })
+        .then(response => {
+          let user = response.data;
+          // console.log(response.data);
+          // console.log(user.email);
+          dispatch(addDriver(user));
+          alert('Driver added successfully.');
+        })
+        .catch(err => {
+          alert(err);
+        });
+    }
     closeModal();
   };
 
@@ -121,7 +132,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 name="lastname"
                 onChange={handleChange}
                 required
-                value={values.lastName}
+                value={values.lastname}
                 variant="outlined"
               />
             </Grid>
@@ -164,7 +175,6 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 label="Phone Number"
                 name="phone"
                 onChange={handleChange}
-                // type="number"
                 required
                 value={values.phone}
                 variant="outlined"
@@ -177,8 +187,6 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 name="age"
                 onChange={handleChange}
                 type="number"
-                // min="0"
-                // onInput="validity.valid||(value='');"
                 value={values.age}
                 variant="outlined"
               />
@@ -205,13 +213,7 @@ const DriverForm = ({ className, closeModal, ...rest }) => {
                 // SelectProps={{ native: true }}
                 value={values.city}
                 variant="outlined"
-              >
-                {/* {states.map(option => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))} */}
-              </TextField>
+              />
             </Grid>
           </Grid>
         </CardContent>

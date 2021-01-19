@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
-import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
   Checkbox,
@@ -18,12 +16,12 @@ import {
   makeStyles,
   Button
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
+import MyUpdateModal from 'src/components/updateModal';
 import axios from 'axios';
-import { updateDriver } from 'src/Redux/actions'
-import { useDispatch } from 'react-redux'
+import { deleteDriver } from 'src/Redux/actions';
+import { useDispatch } from 'react-redux';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
@@ -31,45 +29,48 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const Results = ({ className, drivers, ...rest }) => {
-  
   const classes = useStyles();
   const [selectedDriverIds, setSelectedDriverIds] = useState([]);
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
-    let newSelectedDriverIds;
+  // const handleSelectAll = event => {
+  //   let newSelectedDriverIds;
 
-    if (event.target.checked) {
-      newSelectedDriverIds = drivers.map((driver) => driver._id);
-    } else {
-      newSelectedDriverIds = [];
-    }
+  //   if (event.target.checked) {
+  //     newSelectedDriverIds = drivers.map(driver => driver._id);
+  //   } else {
+  //     newSelectedDriverIds = [];
+  //   }
 
-    setSelectedDriverIds(newSelectedDriverIds);
-  };
+  //   setSelectedDriverIds(newSelectedDriverIds);
+  // };
 
-  const handleSelectOne = (event, id) => {
-    const selectedIndex = selectedDriverIds.indexOf(id);
-    let newSelectedDriverIds = [];
+  // const handleSelectOne = (event, id) => {
+  //   const selectedIndex = selectedDriverIds.indexOf(id);
+  //   let newSelectedDriverIds = [];
 
-    if (selectedIndex === -1) {
-      newSelectedDriverIds = newSelectedDriverIds.concat(selectedDriverIds, id);
-    } else if (selectedIndex === 0) {
-      newSelectedDriverIds = newSelectedDriverIds.concat(selectedDriverIds.slice(1));
-    } else if (selectedIndex === selectedDriverIds.length - 1) {
-      newSelectedDriverIds = newSelectedDriverIds.concat(selectedDriverIds.slice(0, -1));
-    } else if (selectedIndex > 0) {
-      newSelectedDriverIds = newSelectedDriverIds.concat(
-        selectedDriverIds.slice(0, selectedIndex),
-        selectedDriverIds.slice(selectedIndex + 1)
-      );
-    }
+  //   if (selectedIndex === -1) {
+  //     newSelectedDriverIds = newSelectedDriverIds.concat(selectedDriverIds, id);
+  //   } else if (selectedIndex === 0) {
+  //     newSelectedDriverIds = newSelectedDriverIds.concat(
+  //       selectedDriverIds.slice(1)
+  //     );
+  //   } else if (selectedIndex === selectedDriverIds.length - 1) {
+  //     newSelectedDriverIds = newSelectedDriverIds.concat(
+  //       selectedDriverIds.slice(0, -1)
+  //     );
+  //   } else if (selectedIndex > 0) {
+  //     newSelectedDriverIds = newSelectedDriverIds.concat(
+  //       selectedDriverIds.slice(0, selectedIndex),
+  //       selectedDriverIds.slice(selectedIndex + 1)
+  //     );
+  //   }
 
-    setSelectedDriverIds(newSelectedDriverIds);
-  };
+  //   setSelectedDriverIds(newSelectedDriverIds);
+  // };
 
-  const handleLimitChange = (event) => {
+  const handleLimitChange = event => {
     setLimit(event.target.value);
   };
 
@@ -77,131 +78,83 @@ const Results = ({ className, drivers, ...rest }) => {
     setPage(newPage);
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const handleEdit = (values,id) => {
-    alert(id)
-    axios.put(`https://livebusapi.herokuapp.com/api/admin/drivers/${id}/`,
-    {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      username: values.username,
-      password: values.password,
-      phone: values.phone,
-      licensenumber: values.licensenumber,
-      age: values.age,
-      city: values.city,
-      profilePicture: values.profilePicture,
-    })
-     .then(response => {
-       alert("Driver updated successfully")
-       console.log(response.data)
-         dispatch(updateDriver(response.data));
-       })
-     .catch(err => {
-       alert("In Catch")
-       alert(err)
-     });
-  }
-
-  const handleDelete = (id) => {
-    alert(id)
-    axios.delete(`https://livebusapi.herokuapp.com/api/admin/drivers/${id}/`)
-     .then(response => {
-       alert("Driver deleted successfully")
-       console.log(response.data)
-        //  dispatch(deleteDriver(response.data));
-       })
-     .catch(err => {
-       alert("In Catch")
-       alert(err)
-     });
-  }
+  const handleDelete = id => {
+    // alert(id);
+    axios
+      .delete(`https://livebusapi.herokuapp.com/api/admin/drivers/${id}/`)
+      .then(response => {
+        alert('Driver deleted successfully');
+        // console.log(response.data);
+        dispatch(deleteDriver(response.data));
+      })
+      .catch(err => {
+        alert('In Catch');
+        alert(err);
+      });
+  };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
         <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell padding="checkbox">
-                  
-                </TableCell>
-                <TableCell>
-                  Name
-                </TableCell>
-                <TableCell>
-                  Username
-                </TableCell>
-                <TableCell>
-                  License Number
-                </TableCell>
-                <TableCell>
-                  Phone
-                </TableCell>
-                <TableCell>
-                  Age
-                </TableCell>
-                <TableCell>
-                  City
-                </TableCell>
-                <TableCell>
-                </TableCell>
-                <TableCell>
-                </TableCell>
+                {/* <TableCell padding="checkbox"></TableCell> */}
+                <TableCell>Name</TableCell>
+                <TableCell>Username</TableCell>
+                <TableCell>License Number</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Age</TableCell>
+                <TableCell>City</TableCell>
+                <TableCell></TableCell>
+                <TableCell></TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {drivers.slice(0, limit).map((driver) => (
+              {drivers.slice(0, limit).map((driver, index) => (
                 <TableRow
                   hover
                   key={driver._id}
                   selected={selectedDriverIds.indexOf(driver._id) !== -1}
                 >
-                  <TableCell padding="checkbox">
+                  {/* <TableCell padding="checkbox">
                     <Checkbox
                       checked={selectedDriverIds.indexOf(driver._id) !== -1}
-                      onChange={(event) => handleSelectOne(event, driver._id)}
+                      onChange={event => handleSelectOne(event, driver._id)}
                       value="true"
                     />
-                  </TableCell>
+                  </TableCell> */}
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
+                    <Box alignItems="center" display="flex">
+                      <Typography color="textPrimary" variant="body1">
                         {`${driver.firstname} ${driver.lastname}`}
                       </Typography>
                     </Box>
                   </TableCell>
+                  <TableCell>{driver.username}</TableCell>
+                  <TableCell>{driver.licensenumber}</TableCell>
+                  <TableCell>{driver.phone}</TableCell>
+                  <TableCell>{driver.age}</TableCell>
+                  <TableCell>{driver.city}</TableCell>
                   <TableCell>
-                    {driver.username}
+                    <MyUpdateModal
+                      case={'D'}
+                      name={'Driver'}
+                      data={driver}
+                      index={index}
+                    />
                   </TableCell>
                   <TableCell>
-                    {driver.licensenumber}
-                  </TableCell>
-                  <TableCell>
-                    {driver.phone}
-                  </TableCell>
-                  <TableCell>
-                    {driver.age}
-                  </TableCell>
-                  <TableCell>
-                    {driver.city}
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={()=>handleEdit(driver._id)} variant="contained" color="primary">Edit</Button>
-                  </TableCell>
-                  <TableCell>
-                    <Button onClick={()=>handleDelete(driver._id)} variant="contained" color="secondary">Delete</Button>
+                    <Button
+                      onClick={() => handleDelete(driver._id)}
+                      variant="contained"
+                      color="secondary"
+                    >
+                      Delete
+                    </Button>
                   </TableCell>
                   {/* <TableCell>
                     {moment(customer.createdAt).format('DD/MM/YYYY')}

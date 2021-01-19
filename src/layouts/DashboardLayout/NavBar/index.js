@@ -17,15 +17,33 @@ import {
   BarChart as BarChartIcon,
   Lock as LockIcon,
   Settings as SettingsIcon,
-  // ShoppingBag as ShoppingBagIcon,
+  ShoppingBag as ShoppingBagIcon,
   User as UserIcon,
   // UserPlus as UserPlusIcon,
-  Users as UsersIcon
+  Users as UsersIcon,
+  Bell,
+  Edit,
+  MapPin,
+  Map,
+  Truck,
+  FilePlus
 } from 'react-feather';
 import NavItem from './NavItem';
 import { useSelector, useDispatch } from 'react-redux';
 import axios from 'axios';
-import { viewBus, viewDriver, viewConductor, viewStudent, viewAdmin, viewSubAdmin, viewRoute, viewStop, viewNotification, viewTrips} from 'src/Redux/actions';
+import {
+  viewBus,
+  viewDriver,
+  viewConductor,
+  viewStudent,
+  viewAdmin,
+  viewSubAdmin,
+  viewRoute,
+  viewStop,
+  viewNotification,
+  viewTrips,
+  viewFeedback
+} from 'src/Redux/actions';
 
 const items = [
   {
@@ -50,17 +68,17 @@ const items = [
   },
   {
     href: '/app/routes',
-    icon: UsersIcon,
+    icon: MapPin,
     title: 'Routes'
   },
   {
     href: '/app/stops',
-    icon: UsersIcon,
+    icon: MapPin,
     title: 'Stops'
   },
   {
     href: '/app/buses',
-    icon: UsersIcon,
+    icon: Truck,
     title: 'Buses'
   },
   {
@@ -73,25 +91,25 @@ const items = [
     icon: UsersIcon,
     title: 'Subadmins'
   },
-  // {
-  //   href: '/app/products',
-  //   icon: ShoppingBagIcon,
-  //   title: 'Products'
-  // },
   {
     href: '/app/trips',
-    icon: LockIcon,
+    icon: Map,
     title: 'Trips'
   },
   {
     href: '/app/notifications',
-    icon: LockIcon,
+    icon: Bell,
     title: 'Notifications'
   },
   {
     href: '/app/feedbacks',
-    icon: LockIcon,
+    icon: Edit,
     title: 'Feedbacks'
+  },
+  {
+    href: '/app/reports',
+    icon: FilePlus,
+    title: 'Reports'
   },
   {
     href: '/app/account',
@@ -139,58 +157,72 @@ const useStyles = makeStyles(() => ({
 const NavBar = ({ onMobileClose, openMobile }) => {
   const classes = useStyles();
   const location = useLocation();
-  const state = useSelector(state => state)
+  const state = useSelector(state => state);
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
-  const clickHandler = (title) => {
-    let t = title.charAt(0).toLowerCase() + title.slice(1)
+  const clickHandler = title => {
+    let t = title.charAt(0).toLowerCase() + title.slice(1);
 
-    if(t === "dashboard" || t === "settings" || t === "feedbacks" || t === "account"){}
-    else if (t === "drivers" || t === "conductors" || t === "buses" || t === "routes" || t === "stops"|| t === "notifications") {
-      axios.get(`https://livebusapi.herokuapp.com/api/admin/${t}/`)
-      .then(response => {
-        if(t==="buses")
-          dispatch(viewBus(response.data));
-        else if(t==="conductors")
-          dispatch(viewConductor(response.data));
-        else if(t==="drivers")
-          dispatch(viewDriver(response.data));
-        else if(t==="routes")
-          dispatch(viewRoute(response.data));
-        else if(t === "notifications")
-          dispatch(viewNotification(response.data));
-        else if(t === "stops")
-          dispatch(viewStop(response.data));
-      })
-      .catch( err => alert(err) )
+    if (
+      t === 'dashboard' ||
+      t === 'settings' ||
+      t === 'account' ||
+      t === 'reports'
+    ) {
+    } else if (
+      t === 'drivers' ||
+      t === 'conductors' ||
+      t === 'buses' ||
+      t === 'routes' ||
+      t === 'stops' ||
+      t === 'notifications'
+    ) {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/admin/${t}/`)
+        .then(response => {
+          if (t === 'buses') dispatch(viewBus(response.data));
+          else if (t === 'conductors') dispatch(viewConductor(response.data));
+          else if (t === 'drivers') dispatch(viewDriver(response.data));
+          else if (t === 'routes') dispatch(viewRoute(response.data));
+          else if (t === 'notifications')
+            dispatch(viewNotification(response.data));
+          else if (t === 'stops') dispatch(viewStop(response.data));
+        })
+        .catch(err => alert(err));
+    } else if (t === 'students') {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/admin/students/Accept`)
+        .then(response => {
+          dispatch(viewStudent(response.data));
+        })
+        .catch(err => alert(err));
+    } else if (t === 'trips') {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/driver/trips`)
+        .then(response => {
+          console.log(response.data);
+          dispatch(viewTrips(response.data));
+        })
+        .catch(err => alert(err));
+    } else if (t === 'feedbacks') {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/student/feedbacks`)
+        .then(response => {
+          console.log(response.data);
+          dispatch(viewFeedback(response.data));
+        })
+        .catch(err => alert(err));
+    } else {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/users/${t}/`)
+        .then(response => {
+          if (t === 'admins') dispatch(viewAdmin(response.data));
+          else if (t === 'subadmins') dispatch(viewSubAdmin(response.data));
+        })
+        .catch(err => alert(err));
     }
-    else if(t==="students"){
-      axios.get(`https://livebusapi.herokuapp.com/api/admin/students/Accept`)
-      .then((response)=>{
-        dispatch(viewStudent(response.data));
-      })
-      .catch( err=>alert(err) ) 
-    }
-    else if( t=== "trips" ){
-      axios.get(`https://livebusapi.herokuapp.com/api/driver/trips`)
-      .then((response)=>{
-        console.log(response.data);
-        dispatch(viewTrips(response.data));
-      })
-      .catch( err=>alert(err) ) 
-    }
-    else{
-      axios.get(`https://livebusapi.herokuapp.com/api/users/${t}/`)
-      .then(response => {
-        if(t==="admins")
-          dispatch(viewAdmin(response.data));
-        else if(t==="subadmins")
-          dispatch(viewSubAdmin(response.data));
-      })
-      .catch( err => alert(err) )
-    }
-  }
+  };
 
   useEffect(() => {
     if (openMobile && onMobileClose) {
@@ -202,7 +234,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
   const user = {
     avatar: '/static/images/avatars/adminLogo.png',
     jobTitle: state.user.role,
-    name: state.user.username,
+    name: state.user.username
   };
 
   const content = (
@@ -230,7 +262,7 @@ const NavBar = ({ onMobileClose, openMobile }) => {
               key={item.title}
               title={item.title}
               icon={item.icon}
-              onClick={()=>clickHandler(item.title)}
+              onClick={() => clickHandler(item.title)}
             />
           ))}
         </List>

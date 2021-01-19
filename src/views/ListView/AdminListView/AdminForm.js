@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -13,29 +13,14 @@ import {
   makeStyles
 } from '@material-ui/core';
 import axios from 'axios';
-import {useDispatch} from 'react-redux'
-import {addAdmin} from 'src/Redux/actions'
-
-// const states = [
-//   {
-//     value: 'Lahore',
-//     label: 'Lahore'
-//   },
-//   {
-//     value: 'Karachi',
-//     label: 'Karachi'
-//   },
-//   {
-//     value: 'Islamabad',
-//     label: 'Islamabad'
-//   }
-// ];
+import { useDispatch } from 'react-redux';
+import { addAdmin, editAdmin } from 'src/Redux/actions';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const AdminForm = ({ className, closeModal, ...rest }) => {
+const AdminForm = ({ className, closeModal, flag, data, index, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     firstname: '',
@@ -44,8 +29,14 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
     email: '',
     phonenumber: '',
     password: '',
-    city: '',
+    city: ''
   });
+
+  useEffect(() => {
+    if (data) {
+      setValues(data);
+    }
+  }, []);
 
   const handleChange = event => {
     setValues({
@@ -53,32 +44,63 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
       [event.target.name]: event.target.value
     });
   };
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
-    axios.post("https://livebusapi.herokuapp.com/api/users/register-admin/",
-    {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      email: values.email,
-      username: values.username,
-      password: values.password,  
-      phonenumber: values.phonenumber,
-      city: values.city,
-    })
-      .then(response=>{
-        let user = response.data
-        // alert(response.data);
-        dispatch(addAdmin(user));
-        console.log(user)
-        alert("Admin saved successfully");
-      })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-      
-  }
+    if (
+      (values.firstname === '',
+      values.lastname === '',
+      values.username === '',
+      values.email === '',
+      values.password === '',
+      values.phonenumber === '',
+      values.city === '')
+    ) {
+      alert('Enter all details correctly.');
+    } else {
+      if (flag && flag == 'edit') {
+        axios
+          .put(`https://livebusapi.herokuapp.com/api/users/${data._id}`, {
+            firstname: values.firstname,
+            lastname: values.lastname,
+            email: values.email,
+            username: values.username,
+            password: values.password,
+            phonenumber: values.phonenumber,
+            city: values.city
+          })
+          .then(response => {
+            let user = response.data;
+            dispatch(editAdmin(user, index));
+            alert('Admin updated successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      } else {
+        axios
+          .post('https://livebusapi.herokuapp.com/api/users/register-admin/', {
+            firstname: values.firstname,
+            lastname: values.lastname,
+            email: values.email,
+            username: values.username,
+            password: values.password,
+            phonenumber: values.phonenumber,
+            city: values.city
+          })
+          .then(response => {
+            let user = response.data;
+            dispatch(addAdmin(user));
+            alert('Admin added successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      }
+    }
+  };
 
   return (
     <form
@@ -192,16 +214,24 @@ const AdminForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-        <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Save details
           </Button>
-          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 

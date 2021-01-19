@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
+  Button,
   Card,
   CardContent,
   TextField,
@@ -13,55 +14,44 @@ import {
 import { Search as SearchIcon } from 'react-feather';
 import MyModal from 'src/components/modal';
 
-const useStyles = makeStyles(theme => ({
-  root: {}
+const useStyles = makeStyles((theme) => ({
+  root: {},
+  importButton: {
+    marginRight: theme.spacing(1)
+  },
+  exportButton: {
+    marginRight: theme.spacing(1)
+  }
 }));
 
-const Toolbar = ({ className, setSearchBus, dataBus, ...rest }) => {
+const Toolbar = ({ className, ...rest }) => {
   const classes = useStyles();
 
-  const handleSearch = event => {
-    if (event.target.value == '') {
-      setSearchBus(dataBus);
-    } else {
-      const res = dataBus.filter(bus => {
-        if (
-          bus.manufacturer
-            .toLowerCase()
-            .indexOf(event.target.value.toLowerCase()) != -1
-        )
-          return bus;
-        else if (
-          bus.busNo.toLowerCase().indexOf(event.target.value.toLowerCase()) !=
-          -1
-        )
-          return bus;
-        else if (bus.seats <= event.target.value) return bus;
-      });
-      setSearchBus(res);
-    }
-  };
-
   return (
-    <div className={clsx(classes.root, className)} {...rest}>
-      <MyModal case={'B'} name={'Bus'} />
+    <div
+      className={clsx(classes.root, className)}
+      {...rest}
+    >
+      <MyModal case={'A'} name={"Admin"}/>
       <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
               <TextField
                 fullWidth
-                onChange={handleSearch}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SvgIcon fontSize="small" color="action">
+                      <SvgIcon
+                        fontSize="small"
+                        color="action"
+                      >
                         <SearchIcon />
                       </SvgIcon>
                     </InputAdornment>
                   )
                 }}
-                placeholder="Search Bus"
+                placeholder="Search admin"
                 variant="outlined"
               />
             </Box>

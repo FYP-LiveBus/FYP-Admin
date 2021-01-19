@@ -14,7 +14,7 @@ import {
 import { Search as SearchIcon } from 'react-feather';
 import MyModal from 'src/components/modal';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   importButton: {
     marginRight: theme.spacing(1)
@@ -24,28 +24,51 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, setSearchAdmin, dataAdmin, ...rest }) => {
   const classes = useStyles();
 
+  const handleSearch = event => {
+    if (event.target.value == '') {
+      setSearchAdmin(dataAdmin);
+    } else {
+      const res = dataAdmin.filter(admin => {
+        if (
+          admin.firstname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return admin;
+        else if (
+          admin.lastname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return admin;
+        else if (
+          admin.username
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return admin;
+      });
+      setSearchAdmin(res);
+    }
+  };
+
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <MyModal case={'A'} name={"Admin"}/>
+    <div className={clsx(classes.root, className)} {...rest}>
+      <MyModal case={'A'} name={'Admin'} />
       <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
               <TextField
                 fullWidth
+                onChange={handleSearch}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
+                      <SvgIcon fontSize="small" color="action">
                         <SearchIcon />
                       </SvgIcon>
                     </InputAdornment>

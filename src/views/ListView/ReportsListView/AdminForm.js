@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -13,35 +13,39 @@ import {
   makeStyles
 } from '@material-ui/core';
 import axios from 'axios';
-import { useDispatch } from 'react-redux';
-import { addConductor, editConductor } from 'src/Redux/actions';
+import {useDispatch} from 'react-redux'
+import {addAdmin} from 'src/Redux/actions'
+
+// const states = [
+//   {
+//     value: 'Lahore',
+//     label: 'Lahore'
+//   },
+//   {
+//     value: 'Karachi',
+//     label: 'Karachi'
+//   },
+//   {
+//     value: 'Islamabad',
+//     label: 'Islamabad'
+//   }
+// ];
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ConductorForm = ({
-  className,
-  closeModal,
-  flag,
-  data,
-  index,
-  ...rest
-}) => {
+const AdminForm = ({ className, closeModal, ...rest }) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     firstname: '',
     lastname: '',
     username: '',
-    phone: '',
-    age: '',
+    email: '',
+    phonenumber: '',
+    password: '',
     city: '',
-    profilePicture: ''
   });
-
-  useEffect(() => {
-    if (data) setValues(data);
-  }, []);
 
   const handleChange = event => {
     setValues({
@@ -49,56 +53,32 @@ const ConductorForm = ({
       [event.target.name]: event.target.value
     });
   };
-
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
   const saveHandler = () => {
-    // console.log(values);
-
-    if (flag && flag == 'edit') {
-      axios
-        .put(
-          `https://livebusapi.herokuapp.com/api/admin/conductors/${data._id}`,
-          {
-            firstname: values.firstname,
-            lastname: values.lastname,
-            username: values.username,
-            phone: values.phone,
-            age: values.age,
-            city: values.city,
-            profilePicture: values.profilePicture
-          }
-        )
-        .then(response => {
-          let conductor = response.data;
-          dispatch(editConductor(conductor, index));
-          alert('Conductor updated successfully.');
-        })
-        .catch(err => {
-          alert(err);
-        });
-    } else {
-      axios
-        .post('https://livebusapi.herokuapp.com/api/admin/conductors/', {
-          firstname: values.firstname,
-          lastname: values.lastname,
-          username: values.username,
-          phone: values.phone,
-          age: values.age,
-          city: values.city,
-          profilePicture: values.profilePicture
-        })
-        .then(response => {
-          let conductor = response.data;
-          dispatch(addConductor(conductor));
-          alert('Conductor added successfully.');
-        })
-        .catch(err => {
-          alert(err);
-        });
-    }
-    closeModal();
-  };
+    axios.post("https://livebusapi.herokuapp.com/api/users/register-admin/",
+    {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      email: values.email,
+      username: values.username,
+      password: values.password,  
+      phonenumber: values.phonenumber,
+      city: values.city,
+    })
+      .then(response=>{
+        let user = response.data
+        // alert(response.data);
+        dispatch(addAdmin(user));
+        console.log(user)
+        alert("Admin saved successfully");
+      })
+      .catch(err=>{
+        alert(err)
+      })
+      closeModal()
+      
+  }
 
   return (
     <form
@@ -148,26 +128,47 @@ const ConductorForm = ({
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Phone Number"
-                name="phone"
+                label="Password"
+                name="password"
                 onChange={handleChange}
-                type="number"
                 required
-                value={values.phone}
+                value={values.password}
                 variant="outlined"
               />
             </Grid>
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
-                label="Age"
-                name="age"
+                label="Email"
+                name="email"
                 onChange={handleChange}
-                type="number"
-                value={values.age}
+                value={values.email}
                 variant="outlined"
               />
             </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Phone Number"
+                name="phonenumber"
+                onChange={handleChange}
+                type="number"
+                required
+                value={values.phonenumber}
+                variant="outlined"
+              />
+            </Grid>
+            {/* <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
+                label="Date of Birth"
+                name="dob"
+                onChange={handleChange}
+                type="date"
+                value={values.dateOfBirth}
+                variant="outlined"
+              /> 
+            </Grid>*/}
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
@@ -175,37 +176,37 @@ const ConductorForm = ({
                 name="city"
                 onChange={handleChange}
                 required
+                // select
+                // SelectProps={{ native: true }}
                 value={values.city}
                 variant="outlined"
-              />
+              >
+                {/* {states.map(option => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))} */}
+              </TextField>
             </Grid>
           </Grid>
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button
-            style={{ marginRight: 10 }}
-            color="primary"
-            variant="contained"
-            onClick={() => closeModal()}
-          >
-            Cancel
-          </Button>
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={() => saveHandler()}
-          >
+        <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
             Save details
+          </Button>
+          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+            Cancel
           </Button>
         </Box>
       </Card>
     </form>
+    
   );
 };
 
-ConductorForm.propTypes = {
+AdminForm.propTypes = {
   className: PropTypes.string
 };
 
-export default ConductorForm;
+export default AdminForm;

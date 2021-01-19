@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -13,33 +13,21 @@ import {
   makeStyles
 } from '@material-ui/core';
 import axios from 'axios';
-import {useDispatch} from 'react-redux'
-import {addSubAdmin} from 'src/Redux/actions'
-
-const cities = [
-  {
-    value: '',
-    label: ''
-  },
-  {
-    value: 'Lahore',
-    label: 'Lahore'
-  },
-  {
-    value: 'Karachi',
-    label: 'Karachi'
-  },
-  {
-    value: 'Islamabad',
-    label: 'Islamabad'
-  }
-];
+import { useDispatch } from 'react-redux';
+import { addSubAdmin, editSubAdmin } from 'src/Redux/actions';
 
 const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const SubAdminForm = ({ className, closeModal, ...rest }) => {
+const SubAdminForm = ({
+  className,
+  closeModal,
+  flag,
+  data,
+  index,
+  ...rest
+}) => {
   const classes = useStyles();
   const [values, setValues] = useState({
     firstname: '',
@@ -48,9 +36,15 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
     password: '',
     email: '',
     phonenumber: '',
-    city: '',
+    city: ''
     // profilePicture: ''
   });
+
+  useEffect(() => {
+    if (data) {
+      setValues(data);
+    }
+  }, []);
 
   const handleChange = event => {
     setValues({
@@ -59,33 +53,66 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
     });
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
-    axios.post("https://livebusapi.herokuapp.com/api/users/register-subadmin",
-    {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      username: values.username,
-      password: values.password,  
-      email: values.email,
-      phonenumber: values.phonenumber,
-      city: values.city,
-    })
-      .then(response=>{
-        let user = response.data
-        // alert(response.data);
-        console.log(response.data)
-        dispatch(addSubAdmin(user));
-        alert("SubAdmin saved successfully");
-      })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-      
-  }
-
+    if (
+      (values.firstname === '',
+      values.lastname === '',
+      values.username === '',
+      values.email === '',
+      values.password === '',
+      values.phonenumber === '',
+      values.city === '')
+    ) {
+      alert('Enter all details correctly.');
+    } else {
+      if (flag && flag == 'edit') {
+        axios
+          .put(`https://livebusapi.herokuapp.com/api/users/${data._id}`, {
+            firstname: values.firstname,
+            lastname: values.lastname,
+            username: values.username,
+            password: values.password,
+            email: values.email,
+            phonenumber: values.phonenumber,
+            city: values.city
+          })
+          .then(response => {
+            let user = response.data;
+            dispatch(editSubAdmin(user, index));
+            alert('SubAdmin updated successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      } else {
+        axios
+          .post(
+            'https://livebusapi.herokuapp.com/api/users/register-subadmin',
+            {
+              firstname: values.firstname,
+              lastname: values.lastname,
+              username: values.username,
+              password: values.password,
+              email: values.email,
+              phonenumber: values.phonenumber,
+              city: values.city
+            }
+          )
+          .then(response => {
+            let user = response.data;
+            dispatch(addSubAdmin(user));
+            alert('SubAdmin added successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      }
+    }
+  };
 
   return (
     <form
@@ -172,32 +199,40 @@ const SubAdminForm = ({ className, closeModal, ...rest }) => {
                 name="city"
                 onChange={handleChange}
                 required
-                select
-                SelectProps={{ native: true }}
+                // select
+                // SelectProps={{ native: true }}
                 value={values.city}
                 variant="outlined"
               >
-                {cities.map(option => (
+                {/* {cities.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
-                ))}
+                ))} */}
               </TextField>
             </Grid>
           </Grid>
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button style={{marginRight:10}} color="primary" variant="contained" onClick={()=>saveHandler()}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Save details
           </Button>
-          <Button color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 

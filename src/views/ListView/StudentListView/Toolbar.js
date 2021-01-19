@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import clsx from 'clsx';
 import {
   Box,
-  Button,
   Card,
   CardContent,
   TextField,
@@ -13,7 +12,8 @@ import {
 } from '@material-ui/core';
 import { Search as SearchIcon } from 'react-feather';
 import MyModal from 'src/components/modal';
-const useStyles = makeStyles((theme) => ({
+
+const useStyles = makeStyles(theme => ({
   root: {},
   importButton: {
     marginRight: theme.spacing(1)
@@ -29,41 +29,47 @@ const useStyles = makeStyles((theme) => ({
 //   </Box>
 // }
 
-const Toolbar = ({ className, ...rest }) => {
+const Toolbar = ({ className, setSearchStudent, dataStudent, ...rest }) => {
   const classes = useStyles();
 
+  const handleSearch = event => {
+    if (event.target.value == '') {
+      setSearchStudent(dataStudent);
+    } else {
+      const res = dataStudent.filter(student => {
+        if (
+          student.registrationNo
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return student;
+        else if (
+          student.firstname
+            .toLowerCase()
+            .indexOf(event.target.value.toLowerCase()) != -1
+        )
+          return student;
+        else if (student.semester == event.target.value) return student;
+      });
+      setSearchStudent(res);
+    }
+  };
+
   return (
-    <div
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
-      <MyModal case={'ST'} name={"Student"}/>
-      {/* <Box
-        display="flex"
-        justifyContent="flex-end"
-      > 
-        <Button
-          color="primary"
-          variant="contained"
-          
-        >
-          Add Student
-        </Button>
-        
-      </Box> */}
+    <div className={clsx(classes.root, className)} {...rest}>
+      <MyModal case={'ST'} name={'Student'} />
+
       <Box mt={3}>
         <Card>
           <CardContent>
             <Box maxWidth={500}>
               <TextField
                 fullWidth
+                onChange={handleSearch}
                 InputProps={{
                   startAdornment: (
                     <InputAdornment position="start">
-                      <SvgIcon
-                        fontSize="small"
-                        color="action"
-                      >
+                      <SvgIcon fontSize="small" color="action">
                         <SearchIcon />
                       </SvgIcon>
                     </InputAdornment>

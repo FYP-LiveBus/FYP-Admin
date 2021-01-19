@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Modal from 'react-modal';
 import { Button } from '@material-ui/core';
 import DriverForm from 'src/views/ListView/DriverListView/DriverForm';
@@ -26,9 +26,10 @@ const customStyles = {
 // Make sure to bind modal to your appElement (http://reactcommunity.org/react-modal/accessibility/)
 Modal.setAppElement('#root');
 
-export default function MyModal(props) {
+export default function MyUpdateModal(props) {
   const state = useSelector(state => state);
-  const [modalIsOpen, setIsOpen] = React.useState(false);
+
+  const [modalIsOpen, setIsOpen] = useState(false);
   function openModal() {
     setIsOpen(true);
   }
@@ -41,19 +42,51 @@ export default function MyModal(props) {
 
   switch (props.case) {
     case 'A':
-      type = <AdminForm closeModal={closeModal} />;
+      type = (
+        <AdminForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.admins}
+          index={props.index}
+        />
+      );
       break;
 
     case 'B':
-      type = <BusForm closeModal={closeModal} />;
+      type = (
+        <BusForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.bus}
+          index={props.index}
+        />
+      );
       break;
 
     case 'C':
-      type = <ConductorForm closeModal={closeModal} />;
+      type = (
+        <ConductorForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.conductors}
+          index={props.index}
+        />
+      );
       break;
 
     case 'D':
-      type = <DriverForm closeModal={closeModal} />;
+      type = (
+        <DriverForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.drivers}
+          index={props.index}
+        />
+      );
       break;
 
     case 'N':
@@ -61,15 +94,39 @@ export default function MyModal(props) {
       break;
 
     case 'R':
-      type = <RouteForm closeModal={closeModal} />;
+      type = (
+        <RouteForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.routes}
+          index={props.index}
+        />
+      );
       break;
 
     case 'S':
-      type = <StopForm closeModal={closeModal} />;
+      type = (
+        <StopForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.stops}
+          index={props.index}
+        />
+      );
       break;
 
     case 'SA':
-      type = <SubAdminForm closeModal={closeModal} />;
+      type = (
+        <SubAdminForm
+          closeModal={closeModal}
+          flag={'edit'}
+          data={props.data}
+          state={state.subadmins}
+          index={props.index}
+        />
+      );
       break;
 
     case 'ST':
@@ -79,10 +136,7 @@ export default function MyModal(props) {
     default:
       break;
   }
-  let res = '';
-  if (props.name === 'Notification') res = 'New' + props.name;
-  else if (props.name === 'Student') res = 'Pending ' + props.name + 's';
-  else res = 'Add ' + props.name;
+  let res = 'Edit';
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column' }}>
@@ -90,7 +144,7 @@ export default function MyModal(props) {
         color="primary"
         variant="contained"
         onClick={() => openModal()}
-        style={{ alignSelf: 'flex-end' }}
+        style={{ alignSelf: 'center' }}
       >
         {res}
       </Button>
@@ -98,7 +152,7 @@ export default function MyModal(props) {
       <Modal
         isOpen={modalIsOpen}
         style={customStyles}
-        contentLabel="Example Modal"
+        contentLabel="Update Modal"
       >
         {type}
       </Modal>

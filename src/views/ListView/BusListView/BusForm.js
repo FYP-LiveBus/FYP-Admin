@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -12,12 +12,14 @@ import {
   TextField,
   makeStyles
 } from '@material-ui/core';
-import axios from "axios"
-import {useDispatch} from 'react-redux'
-import {addBus} from 'src/Redux/actions'
+import axios from 'axios';
+import { useDispatch } from 'react-redux';
+import { addBus, editBus } from 'src/Redux/actions';
+import firebase from 'firebase/app';
+import 'firebase/firestore';
+import firebaseConfig from '../../../firebase';
 
-
-const states = [
+const transmissionTypes = [
   {
     value: '',
     label: ''
@@ -36,15 +38,26 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const BusForm = ({ className, closeModal, ...rest }) => {
+const BusForm = ({ className, closeModal, flag, data, index, ...rest }) => {
   const classes = useStyles();
+
   const [values, setValues] = useState({
     busNo: '',
     busModel: '',
     modelYear: '',
     manufacturer: '',
-    transmission: '',
+    seats: 0,
+    transmission: ''
   });
+
+  useEffect(() => {
+    if (!firebase.apps.length) {
+      firebase.initializeApp(firebaseConfig);
+    }
+    if (data) {
+      setValues(data);
+    }
+  }, []);
 
   const handleChange = event => {
     setValues({
@@ -53,30 +66,77 @@ const BusForm = ({ className, closeModal, ...rest }) => {
     });
   };
 
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const saveHandler = () => {
     console.log(values);
-    axios.post("https://livebusapi.herokuapp.com/api/admin/buses/",
-    {
-      busNo: values.busNo,
-      busModel: values.busModel,
-      modelYear: values.modelYear,
-      manufacturer: values.manufacturer,
-      transmission: values.transmission
-    })
-      .then(response=>{
-        let bus = response.data
-        // alert(response.data);
-        console.log(response.data)
-        dispatch(addBus(bus));
-      })
-      .catch(err=>{
-        alert(err)
-      })
-      closeModal()
-  }
 
+    if (flag && flag == 'edit') {
+      axios
+        .put(`https://livebusapi.herokuapp.com/api/admin/buses/${data._id}`, {
+          busNo: values.busNo,
+          busModel: values.busModel,
+          modelYear: values.modelYear,
+          manufacturer: values.manufacturer,
+          seats: values.seats,
+          transmission: values.transmission
+        })
+        .then(response => {
+          let bus = response.data;
+          // console.log(response.data);
+          dispatch(editBus(bus, index));
+          updateInFirebase(bus.busNo, bus.seats);
+          alert('Bus Updated successfully');
+        })
+        .catch(err => {
+          alert(err);
+        });
+    } else {
+      axios
+        .post('https://livebusapi.herokuapp.com/api/admin/buses/', {
+          busNo: values.busNo,
+          busModel: values.busModel,
+          modelYear: values.modelYear,
+          manufacturer: values.manufacturer,
+          seats: values.seats,
+          transmission: values.transmission
+        })
+        .then(response => {
+          let bus = response.data;
+          saveToFirebase();
+          dispatch(addBus(bus));
+          alert('Bus added successfully');
+        })
+        .catch(err => {
+          alert(err);
+        });
+    }
+
+    closeModal();
+  };
+
+  const saveToFirebase = async () => {
+    const s = values.seats;
+    const data = {
+      // busNo: bus.busNo,
+      seats: +s
+    };
+    const res = await firebase
+      .firestore()
+      .collection('Bus')
+      .doc(values.busNo)
+      .set(data);
+    console.log(res);
+  };
+
+  const updateInFirebase = async (busNo, seats) => {
+    let totalSeats = seats;
+    const no = await firebase
+      .firestore()
+      .collection('Bus')
+      .doc(busNo)
+      .update({ seats: +totalSeats });
+  };
 
   return (
     <form
@@ -136,6 +196,16 @@ const BusForm = ({ className, closeModal, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
+                label="Seats"
+                name="seats"
+                onChange={handleChange}
+                value={values.seats}
+                variant="outlined"
+              />
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
                 label="Transmission"
                 name="transmission"
                 onChange={handleChange}
@@ -145,7 +215,7 @@ const BusForm = ({ className, closeModal, ...rest }) => {
                 value={values.transmission}
                 variant="outlined"
               >
-                {states.map(option => (
+                {transmissionTypes.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
@@ -156,16 +226,24 @@ const BusForm = ({ className, closeModal, ...rest }) => {
         </CardContent>
         <Divider />
         <Box display="flex" justifyContent="flex-end" p={2}>
-          <Button style={{marginRight: 10}} color="primary" variant="contained" onClick={()=>closeModal()}>
+          <Button
+            style={{ marginRight: 10 }}
+            color="primary"
+            variant="contained"
+            onClick={() => closeModal()}
+          >
             Cancel
           </Button>
-          <Button color="primary" variant="contained" onClick={()=>saveHandler()}>
+          <Button
+            color="primary"
+            variant="contained"
+            onClick={() => saveHandler()}
+          >
             Save details
           </Button>
         </Box>
       </Card>
     </form>
-    
   );
 };
 

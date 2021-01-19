@@ -5,29 +5,28 @@ import DashboardLayout from 'src/layouts/DashboardLayout';
 import AccountView from 'src/views/account/AccountView';
 import DashboardView from 'src/views/reports/DashboardView';
 import LoginView from 'src/views/auth/LoginView';
-import StudentListView from 'src/views/ListView/StudentListView'
-import DriverListView from 'src/views/ListView/DriverListView'
-import ConductorListView from 'src/views/ListView/ConductorListView'
+import StudentListView from 'src/views/ListView/StudentListView';
+import DriverListView from 'src/views/ListView/DriverListView';
+import ConductorListView from 'src/views/ListView/ConductorListView';
 import BusListView from 'src/views/ListView/BusListView';
 import RouteListView from 'src/views/ListView/RouteListView';
 import StopListView from 'src/views/ListView/StopListView';
 import AdminListView from 'src/views/ListView/AdminListView';
 import SubAdminListView from 'src/views/ListView/SubAdminListView';
-import TripListView from 'src/views/ListView/TripListView'
+import TripListView from 'src/views/ListView/TripListView';
 import ProductListView from 'src/views/product/ProductListView';
 import SettingsView from 'src/views/settings/SettingsView';
 import NotFoundView from 'src/views/errors/NotFoundView';
 import FeedBackListView from 'src/views/ListView/FeedBackListView';
 import NotificationListView from './views/ListView/NotificationListView';
-import ProtectedRoute from 'src/components/ProtectedRoute'
-import { login } from 'src/Redux/actions'
+import ProtectedRoute from 'src/components/ProtectedRoute';
+import ReportView from 'src/views/reports/ReportView';
+import { login } from 'src/Redux/actions';
 
 export default function Routes() {
-  
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   let token = JSON.parse(localStorage.getItem('token'));
-  if(token)
-    dispatch(login(token))
+  if (token) dispatch(login(token));
 
   // console.log(state)
   const routes = [
@@ -38,11 +37,16 @@ export default function Routes() {
         { path: '404', element: <NotFoundView /> },
         { path: '/', element: <Navigate to="login" /> },
         { path: '*', element: <Navigate to="/404" /> }
-        ]
+      ]
     },
     {
       path: 'app',
-      element: <ProtectedRoute component={DashboardLayout} login={token?true:false}/>,
+      element: (
+        <ProtectedRoute
+          component={DashboardLayout}
+          login={token ? true : false}
+        />
+      ),
       children: [
         { path: 'account', element: <AccountView /> },
         { path: 'students', element: <StudentListView /> },
@@ -53,8 +57,9 @@ export default function Routes() {
         { path: 'stops', element: <StopListView /> },
         { path: 'subadmins', element: <SubAdminListView /> },
         { path: 'admins', element: <AdminListView /> },
-        { path: 'dashboard', element: <DashboardView />},
+        { path: 'dashboard', element: <DashboardView /> },
         { path: 'trips', element: <TripListView /> },
+        { path: 'reports', element: <ReportView /> },
         { path: 'notifications', element: <NotificationListView /> },
         { path: 'feedbacks', element: <FeedBackListView /> },
         { path: 'products', element: <ProductListView /> },
@@ -63,5 +68,5 @@ export default function Routes() {
       ]
     }
   ];
-  return routes
+  return routes;
 }

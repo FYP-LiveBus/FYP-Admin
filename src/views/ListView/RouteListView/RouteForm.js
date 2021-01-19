@@ -16,9 +16,9 @@ import {
   Input,
   InputLabel
 } from '@material-ui/core';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import axios from 'axios';
-import { addRoute } from 'src/Redux/actions';
+import { addRoute, editRoute } from 'src/Redux/actions';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -35,23 +35,56 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const RouteForm = ({ className, closeModal, ...rest }) => {
+const status = [
+  {
+    value: '',
+    label: ''
+  },
+  {
+    value: 'Active',
+    label: 'Active'
+  },
+  {
+    value: 'In-Active',
+    label: 'In-Active'
+  }
+];
+
+const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
   const classes = useStyles();
 
   const [values, setValues] = useState({
-    routeNo: '',
+    routeNo: 0,
     routeName: '',
     startingPoint: '',
     endingPoint: 'Comsats',
     stops: [],
     selectiveStops: [],
     driversList: [],
-    status: '',
-    selectedDriver: {},
     driver: '',
-    driverID: ''
+    driverID: '',
+    status: '',
+    buses: [],
+    selectedBus: {},
+    busNo: ''
   });
 
+  // useEffect(() => {
+  //   if (data) {
+  //     setValues({
+  //       routeNo: data.routeNo,
+  //       routeName: data.routeName,
+  //       // startingPoint: values.startingPoint,
+  //       stops: data.stops,
+  //       // drivers: values.driversList,
+  //       driver: data.driver,
+  //       // driverID: data.driverID,
+  //       status: data.status,
+  //       busNo: data.busNo
+  //     });
+  //   }
+  // }, []);
+  // alert(JSON.stringify(data));
   useEffect(() => {
     axios
       .get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
@@ -61,11 +94,17 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
           .get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
           .then(response => {
             let st = ['', ...response.data];
-            setValues({
-              ...values,
-              stops: st,
-              driversList: driverL
-            });
+            axios
+              .get(`https://livebusapi.herokuapp.com/api/admin/buses`)
+              .then(response => {
+                let bu = [{}, ...response.data];
+                setValues({
+                  ...values,
+                  buses: bu,
+                  stops: st,
+                  driversList: driverL
+                });
+              });
           })
           .catch(err => alert(err));
       })
@@ -82,7 +121,14 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
   const handleDriverChange = event => {
     setValues({
       ...values,
-      selectedDriver: event.target.value
+      index: event.target.value
+    });
+  };
+
+  const handleBusChange = event => {
+    setValues({
+      ...values,
+      busIndex: event.target.value
     });
   };
 
@@ -92,37 +138,87 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
 
   const dispatch = useDispatch();
 
+  // console.log(values.driversList[values.index]);
+  // console.log(values.buses[values.busIndex]);
+  // console.log(' Seleective Stops ==============>' + values.selectiveStops);
+  // console.log(values.startingPoint);
+
   const saveHandler = () => {
-    console.log(values);
-    axios
-      .post('https://livebusapi.herokuapp.com/api/admin/routes', {
-        routeNo: values.routeNo,
-        routeName: values.routeName,
-        startingPoint: values.startingPoint,
-        stops: values.selectiveStops,
-        status: values.status,
-        driver: values.selectedDriver.username,
-        driverID: values.selectedDriver.driverID
-      })
-      .then(response => {
-        let route = response.data;
-        alert(JSON.stringify(response.data));
-        console.log(response.data);
-        dispatch(addRoute(route));
-      })
-      .catch(err => {
-        alert(err);
-      });
-    closeModal();
+    // console.log(values);
+    if (
+      values.routeNo <= 0 ||
+      values.routeName === '' ||
+      values.startingPoint === '' ||
+      values.stops === [] ||
+      values.driversList === [] ||
+      values.status === '' ||
+      values.buses === []
+      // values.busNo === ''
+    ) {
+      alert('Enter all details correctly');
+      // alert(values.routeNo);
+      // alert(values.routeName);
+      // alert(values.startingPoint);
+      // alert(JSON.stringify(values.stops));
+      // alert(' Seleective Stops ==============>' + values.selectiveStops);
+      // alert(values.status);
+      // alert(JSON.stringify(values.driversList[values.index].username));
+      // alert(values.driversList[values.index].driverID);
+      // alert(values.buses[values.busIndex].busNo);
+    } else {
+      if (flag && flag == 'edit') {
+        axios
+          .put(
+            `https://livebusapi.herokuapp.com/api/admin/routes/${data._id}`,
+            {
+              routeNo: values.routeNo,
+              routeName: values.routeName,
+              startingPoint: values.startingPoint,
+              stops: values.selectiveStops,
+              status: values.status,
+              driver: values.driversList[values.index].username,
+              driverID: values.driversList[values.index].driverID,
+              busNo: values.buses[values.busIndex].busNo
+            }
+          )
+          .then(response => {
+            let route = response.data;
+            dispatch(editRoute(route, index));
+            alert('Route updated successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      } else {
+        axios
+          .post('https://livebusapi.herokuapp.com/api/admin/routes', {
+            routeNo: values.routeNo,
+            routeName: values.routeName,
+            startingPoint: values.startingPoint,
+            stops: values.selectiveStops,
+            status: values.status,
+            driver: values.driversList[values.index].username,
+            driverID: values.driversList[values.index].driverID,
+            busNo: values.buses[values.busIndex].busNo
+          })
+          .then(response => {
+            let route = response.data;
+            dispatch(addRoute(route));
+            alert('Route added successfully');
+          })
+          .catch(err => {
+            alert(err);
+          });
+        closeModal();
+      }
+    }
   };
-  // console.log(values.driversList);
-  console.log(values.selectedDriver);
-  // console.log(values.selectedDriver.username);
-  // console.log(values.selectedDriver.driverID);
+
   return (
     <form
       autoComplete="off"
-      noValidate
+      // noValidate
       className={clsx(classes.root, className)}
       {...rest}
     >
@@ -167,8 +263,8 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 MenuProps={MenuProps}
                 style={{ width: '400px' }}
               >
-                {values.stops.map(stop => (
-                  <MenuItem key={stop.stopName} value={stop.stopName}>
+                {values.stops.map((stop, i) => (
+                  <MenuItem key={i} value={stop.stopName}>
                     {stop.stopName}
                   </MenuItem>
                 ))}
@@ -186,9 +282,9 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
                 value={values.startingPoint}
                 variant="outlined"
               >
-                {values.stops.map(stop => (
-                  <option key={stop._id} value={stop.stopName}>
-                    {stop.stopName}
+                {values.selectiveStops.map((selectStop, i) => (
+                  <option key={i} value={selectStop}>
+                    {selectStop}
                   </option>
                 ))}
               </TextField>
@@ -197,16 +293,16 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
               <TextField
                 fullWidth
                 label="Driver"
-                name="driver"
+                name="selectedDriver"
                 onChange={handleDriverChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.driver}
+                value={values.selectedDriver}
                 variant="outlined"
               >
-                {values.driversList.map(dr => (
-                  <option key={dr._id} value={JSON.stringify(dr)}>
+                {values.driversList.map((dr, i) => (
+                  <option key={i} value={i}>
                     {dr.firstname ? dr.firstname : ''}
                     {''}
                     {dr.lastname ? dr.lastname : ''}
@@ -218,20 +314,39 @@ const RouteForm = ({ className, closeModal, ...rest }) => {
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
+                label="Buses"
+                name="busIndex"
+                onChange={handleBusChange}
+                required
+                select
+                SelectProps={{ native: true }}
+                value={values.busIndex}
+                variant="outlined"
+              >
+                {values.buses.map((bus, i) => (
+                  <option key={i} value={i}>
+                    {bus.busNo ? bus.busNo : ''}
+                  </option>
+                ))}
+              </TextField>
+            </Grid>
+            <Grid item md={6} xs={12}>
+              <TextField
+                fullWidth
                 label="Status"
                 name="status"
                 onChange={handleChange}
                 required
-                // select
-                // SelectProps={{ native: true }}
+                select
+                SelectProps={{ native: true }}
                 value={values.status}
                 variant="outlined"
               >
-                {/* {status.map(option => (
+                {status.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
-                ))} */}
+                ))}
               </TextField>
             </Grid>
           </Grid>

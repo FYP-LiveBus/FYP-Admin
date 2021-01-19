@@ -4,10 +4,8 @@ import PropTypes from 'prop-types';
 import moment from 'moment';
 import PerfectScrollbar from 'react-perfect-scrollbar';
 import {
-  Avatar,
   Box,
   Card,
-  Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -17,9 +15,8 @@ import {
   Typography,
   makeStyles
 } from '@material-ui/core';
-import getInitials from 'src/utils/getInitials';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {},
   avatar: {
     marginRight: theme.spacing(2)
@@ -32,11 +29,11 @@ const Results = ({ className, trips, ...rest }) => {
   const [limit, setLimit] = useState(10);
   const [page, setPage] = useState(0);
 
-  const handleSelectAll = (event) => {
+  const handleSelectAll = event => {
     let newSelectedTripIds;
 
     if (event.target.checked) {
-      newSelectedTripIds = trips.map((trip) => trip._id);
+      newSelectedTripIds = trips.map(trip => trip._id);
     } else {
       newSelectedTripIds = [];
     }
@@ -53,7 +50,9 @@ const Results = ({ className, trips, ...rest }) => {
     } else if (selectedIndex === 0) {
       newSelectedTripIds = newSelectedTripIds.concat(selectedTripIds.slice(1));
     } else if (selectedIndex === selectedTripIds.length - 1) {
-      newSelectedTripIds = newSelectedTripIds.concat(selectedTripIds.slice(0, -1));
+      newSelectedTripIds = newSelectedTripIds.concat(
+        selectedTripIds.slice(0, -1)
+      );
     } else if (selectedIndex > 0) {
       newSelectedTripIds = newSelectedTripIds.concat(
         selectedTripIds.slice(0, selectedIndex),
@@ -64,7 +63,7 @@ const Results = ({ className, trips, ...rest }) => {
     setSelectedTripIds(newSelectedTripIds);
   };
 
-  const handleLimitChange = (event) => {
+  const handleLimitChange = event => {
     setLimit(event.target.value);
   };
 
@@ -73,65 +72,37 @@ const Results = ({ className, trips, ...rest }) => {
   };
 
   return (
-    <Card
-      className={clsx(classes.root, className)}
-      {...rest}
-    >
+    <Card className={clsx(classes.root, className)} {...rest}>
       <PerfectScrollbar>
         <Box minWidth={1050}>
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>
-                  Driver
-                </TableCell>
-                <TableCell>
-                  Route No
-                </TableCell>
-                <TableCell>
-                  Starting Stop
-                </TableCell>
-                <TableCell>
-                  Ending Stop
-                </TableCell>
-                <TableCell>
-                  Date
-                </TableCell>
+                <TableCell>Driver</TableCell>
+                <TableCell>Route No</TableCell>
+                <TableCell>Starting Stop</TableCell>
+                <TableCell>Ending Stop</TableCell>
+                <TableCell>Date</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {trips.slice(0, limit).map((trip) => (
+              {trips.slice(0, limit).map(trip => (
                 <TableRow
                   hover
                   key={trip._id}
                   selected={selectedTripIds.indexOf(trip._id) !== -1}
                 >
-                  
                   <TableCell>
-                    <Box
-                      alignItems="center"
-                      display="flex"
-                    >
-                      <Typography
-                        color="textPrimary"
-                        variant="body1"
-                      >
+                    <Box alignItems="center" display="flex">
+                      <Typography color="textPrimary" variant="body1">
                         {trip.driverName}
                       </Typography>
                     </Box>
                   </TableCell>
-                  <TableCell>
-                    {trip.routeNo}
-                  </TableCell>
-                  <TableCell>
-                    {trip.startingPoint}
-                  </TableCell>
-                  <TableCell>
-                    {trip.endingPoint}
-                  </TableCell>
-                  <TableCell>
-                    {trip.date}
-                  </TableCell>
+                  <TableCell>{trip.routeNo}</TableCell>
+                  <TableCell>{trip.startingPoint}</TableCell>
+                  <TableCell>{trip.endingPoint}</TableCell>
+                  <TableCell>{trip.date}</TableCell>
                 </TableRow>
               ))}
             </TableBody>
