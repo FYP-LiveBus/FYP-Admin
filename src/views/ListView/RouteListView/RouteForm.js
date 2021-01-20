@@ -63,52 +63,72 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
     driversList: [],
     driver: '',
     driverID: '',
+    selectedDriver: {},
     status: '',
     buses: [],
     selectedBus: {},
     busNo: ''
   });
 
-  // useEffect(() => {
-  //   if (data) {
-  //     setValues({
-  //       routeNo: data.routeNo,
-  //       routeName: data.routeName,
-  //       // startingPoint: values.startingPoint,
-  //       stops: data.stops,
-  //       // drivers: values.driversList,
-  //       driver: data.driver,
-  //       // driverID: data.driverID,
-  //       status: data.status,
-  //       busNo: data.busNo
-  //     });
-  //   }
-  // }, []);
-  // alert(JSON.stringify(data));
   useEffect(() => {
-    axios
-      .get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
-      .then(response => {
-        let driverL = [{}, ...response.data];
-        axios
-          .get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
-          .then(response => {
-            let st = ['', ...response.data];
-            axios
-              .get(`https://livebusapi.herokuapp.com/api/admin/buses`)
-              .then(response => {
-                let bu = [{}, ...response.data];
-                setValues({
-                  ...values,
-                  buses: bu,
-                  stops: st,
-                  driversList: driverL
+    if (data) {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
+        .then(response => {
+          let driverL = [{}, ...response.data];
+          axios
+            .get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
+            .then(response => {
+              let st = ['', ...response.data];
+              axios
+                .get(`https://livebusapi.herokuapp.com/api/admin/buses`)
+                .then(response => {
+                  let bu = [{}, ...response.data];
+                  setValues({
+                    ...values,
+                    buses: bu,
+                    stops: st,
+                    driversList: driverL,
+                    routeNo: data.routeNo,
+                    routeName: data.routeName,
+                    selectiveStops: data.stops,
+                    status: data.status,
+                    busNo: data.busNo,
+                    startingPoint: data.startingPoint
+                    // driver: data.username,
+                    // index: values.driversList.indexOf(data.username),
+                    // driver: values.driversList[values.index].username,
+                  });
                 });
-              });
-          })
-          .catch(err => alert(err));
-      })
-      .catch(err => alert(err));
+            })
+            .catch(err => alert(err));
+        })
+        .catch(err => alert(err));
+    } else if (!data) {
+      axios
+        .get(`https://livebusapi.herokuapp.com/api/admin/drivers`)
+        .then(response => {
+          let driverL = [{}, ...response.data];
+          axios
+            .get(`https://livebusapi.herokuapp.com/api/admin/stops/Active`)
+            .then(response => {
+              let st = ['', ...response.data];
+              axios
+                .get(`https://livebusapi.herokuapp.com/api/admin/buses`)
+                .then(response => {
+                  let bu = [{}, ...response.data];
+                  setValues({
+                    ...values,
+                    buses: bu,
+                    stops: st,
+                    driversList: driverL
+                  });
+                });
+            })
+            .catch(err => alert(err));
+        })
+        .catch(err => alert(err));
+    }
   }, []);
 
   const handleChange = event => {
@@ -121,14 +141,16 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
   const handleDriverChange = event => {
     setValues({
       ...values,
-      index: event.target.value
+      index: event.target.value,
+      selectedDriver: values.driversList[index]
     });
   };
 
   const handleBusChange = event => {
     setValues({
       ...values,
-      busIndex: event.target.value
+      busNo: event.target.value
+      // busIndex: event.target.value
     });
   };
 
@@ -176,9 +198,9 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
               startingPoint: values.startingPoint,
               stops: values.selectiveStops,
               status: values.status,
-              driver: values.driversList[values.index].username,
-              driverID: values.driversList[values.index].driverID,
-              busNo: values.buses[values.busIndex].busNo
+              driver: values.selectedDriver.username,
+              driverID: values.selectedDriver.driverID,
+              busNo: values.busNo
             }
           )
           .then(response => {
@@ -200,7 +222,7 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
             status: values.status,
             driver: values.driversList[values.index].username,
             driverID: values.driversList[values.index].driverID,
-            busNo: values.buses[values.busIndex].busNo
+            busNo: values.busNo
           })
           .then(response => {
             let route = response.data;
@@ -270,6 +292,8 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
                 ))}
               </Select>
             </Grid>
+            {/* {alert('Data Stops' + JSON.stringify(data.selectiveStops))} */}
+            {/* {alert(JSON.stringify(values.selectiveStops))} */}
             <Grid item md={6} xs={12}>
               <TextField
                 fullWidth
@@ -315,16 +339,16 @@ const RouteForm = ({ className, closeModal, flag, data, index, ...rest }) => {
               <TextField
                 fullWidth
                 label="Buses"
-                name="busIndex"
+                name="busNo"
                 onChange={handleBusChange}
                 required
                 select
                 SelectProps={{ native: true }}
-                value={values.busIndex}
+                value={values.busNo}
                 variant="outlined"
               >
                 {values.buses.map((bus, i) => (
-                  <option key={i} value={i}>
+                  <option key={i} value={bus.busNo}>
                     {bus.busNo ? bus.busNo : ''}
                   </option>
                 ))}

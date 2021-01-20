@@ -7,7 +7,7 @@ import {
   // Avatar,
   Box,
   Card,
-  Checkbox,
+  // Checkbox,
   Table,
   TableBody,
   TableCell,
@@ -21,7 +21,7 @@ import {
 // import getInitials from 'src/utils/getInitials';
 import axios from 'axios';
 import MyUpdateModal from 'src/components/updateModal';
-import { deleteAdmin, editAdmin } from 'src/Redux/actions';
+import { deleteAdmin } from 'src/Redux/actions';
 import { useDispatch } from 'react-redux';
 
 const useStyles = makeStyles(theme => ({

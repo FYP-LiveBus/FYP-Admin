@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const RecentTrips = ({ className, ...rest }) => {
+const RecentStopHistory = ({ className, ...rest }) => {
   const classes = useStyles();
   const theme = useTheme();
 
@@ -30,7 +30,7 @@ const RecentTrips = ({ className, ...rest }) => {
   useEffect(() => {
     axios
       .get(
-        `https://livebusapi.herokuapp.com/api/student/trips/countRoutesForGraph`
+        `https://livebusapi.herokuapp.com/api/student/trips/countStopsForGraph`
       )
       .then(response => {
         // alert(JSON.stringify(response.data));
@@ -38,7 +38,7 @@ const RecentTrips = ({ className, ...rest }) => {
         let arr1 = [];
         let arr2 = [];
         da.map(d => {
-          arr1.push('Route ' + d._id);
+          arr1.push(d._id);
           arr2.push(d.count);
         });
         setXAxis(arr1);
@@ -126,7 +126,7 @@ const RecentTrips = ({ className, ...rest }) => {
             Last 7 days
           </Button>
         }
-        title="Recent Trips on each route"
+        title="Recent Trips on each stop"
       />
       <Divider />
       <CardContent>
@@ -149,8 +149,8 @@ const RecentTrips = ({ className, ...rest }) => {
   );
 };
 
-RecentTrips.propTypes = {
+RecentStopHistory.propTypes = {
   className: PropTypes.string
 };
 
-export default RecentTrips;
+export default RecentStopHistory;

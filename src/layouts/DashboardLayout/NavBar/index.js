@@ -255,17 +255,21 @@ const NavBar = ({ onMobileClose, openMobile }) => {
       </Box>
       <Divider />
       <Box p={2}>
-        <List>
-          {items.map(item => (
-            <NavItem
-              href={item.href}
-              key={item.title}
-              title={item.title}
-              icon={item.icon}
-              onClick={() => clickHandler(item.title)}
-            />
-          ))}
-        </List>
+        {state.user.role === 'admin' ? (
+          <List>
+            {items.map(item => (
+              <NavItem
+                href={item.href}
+                key={item.title}
+                title={item.title}
+                icon={item.icon}
+                onClick={() => clickHandler(item.title)}
+              />
+            ))}
+          </List>
+        ) : (
+          ''
+        )}
       </Box>
       <Box flexGrow={1} />
     </Box>

@@ -19,7 +19,7 @@ class MapView extends Component {
         lat: 31.40151,
         lng: 74.20686
       },
-      zoom: 11
+      zoom: 10.6
     };
   }
 
@@ -55,7 +55,7 @@ class MapView extends Component {
   render() {
     return (
       // Important! Always set the container height explicitly
-      <div style={{ height: '100vh', width: '100%' }}>
+      <div style={{ height: '70vh', width: '100%' }}>
         <GoogleMapReact
           bootstrapURLKeys={{ key: 'AIzaSyAI7fdb3cSLp4-TbhZsonR3Gflc8TSUXs4' }}
           defaultCenter={this.state.defaultLocation}

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import {useSelector, useDispatch} from 'react-redux'
-import { saveUser } from 'src/Redux/actions'
+import { useSelector, useDispatch } from 'react-redux';
+import { saveUser } from 'src/Redux/actions';
 import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
@@ -20,18 +20,18 @@ const useStyles = makeStyles(() => ({
   root: {}
 }));
 
-const ProfileDetails = ({user, className, ...rest }) => {
+const ProfileDetails = ({ user, className, ...rest }) => {
   const classes = useStyles();
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [values, setValues] = useState({
     firstname: user.firstname,
     lastname: user.lastname,
     email: user.email,
     username: user.username,
-    role:user.role,
+    role: user.role,
     phonenumber: user.phonenumber,
-    city: user.city,  
+    city: user.city
   });
 
   const handleChange = event => {
@@ -42,28 +42,27 @@ const ProfileDetails = ({user, className, ...rest }) => {
   };
 
   const saveHandler = () => {
-    console.log(values)
-    console.log(user._id)
-    axios.put(`https://livebusapi.herokuapp.com/api/users/${user._id}`, 
-    {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      email: values.email,
-      username: values.username,
-      role: values.role,
-      phonenumber: values.phonenumber,
-      city: values.city
-    })
-    .then( response => {
-      console.log(response.data)
-      dispatch(saveUser(response.data));
-      alert("Updated Successfully")
-    })
-    .catch(err=>{
-      alert(err);
-    });
-    
-  }
+    console.log(values);
+    console.log(user._id);
+    axios
+      .put(`https://livebusapi.herokuapp.com/api/users/${user._id}`, {
+        firstname: values.firstname,
+        lastname: values.lastname,
+        email: values.email,
+        username: values.username,
+        role: values.role,
+        phonenumber: values.phonenumber,
+        city: values.city
+      })
+      .then(response => {
+        // console.log(response.data);
+        dispatch(saveUser(response.data));
+        alert('Updated Successfully');
+      })
+      .catch(err => {
+        alert(err);
+      });
+  };
 
   return (
     <form
@@ -82,7 +81,7 @@ const ProfileDetails = ({user, className, ...rest }) => {
                 fullWidth
                 helperText="Please specify the first name"
                 label="First name"
-                name="firstName"
+                name="firstname"
                 onChange={handleChange}
                 required
                 value={values.firstname}
@@ -93,7 +92,7 @@ const ProfileDetails = ({user, className, ...rest }) => {
               <TextField
                 fullWidth
                 label="Last name"
-                name="lastName"
+                name="lastname"
                 onChange={handleChange}
                 required
                 value={values.lastname}
@@ -129,6 +128,7 @@ const ProfileDetails = ({user, className, ...rest }) => {
                 name="role"
                 onChange={handleChange}
                 required
+                disabled="true"
                 value={values.role}
                 variant="outlined"
               />
@@ -146,7 +146,7 @@ const ProfileDetails = ({user, className, ...rest }) => {
               />
             </Grid>
             <Grid item md={6} xs={12}>
-            <TextField
+              <TextField
                 fullWidth
                 label="City"
                 name="city"
@@ -164,7 +164,7 @@ const ProfileDetails = ({user, className, ...rest }) => {
                 value={values.city}
                 variant="outlined"
               /> */}
-                {/* {states.map(option => (
+              {/* {states.map(option => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>

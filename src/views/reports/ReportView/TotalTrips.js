@@ -3,11 +3,11 @@ import clsx from 'clsx';
 import PropTypes from 'prop-types';
 import {
   Avatar,
-  Box,
+  // Box,
   Card,
   CardContent,
   Grid,
-  LinearProgress,
+  // LinearProgress,
   Typography,
   makeStyles,
   colors
@@ -48,7 +48,7 @@ const TotalTrips = ({ className, ...rest }) => {
         <Grid container justify="space-between" spacing={3}>
           <Grid item>
             <Typography color="textSecondary" gutterBottom variant="h6">
-              TRIPS
+              Total Trips
             </Typography>
             <Typography color="textPrimary" variant="h3">
               {countTrips}

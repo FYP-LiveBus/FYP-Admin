@@ -5,11 +5,11 @@ import moment from 'moment';
 import {
   Avatar,
   Box,
-  Button,
+  // Button,
   Card,
-  CardActions,
+  // CardActions,
   CardContent,
-  Divider,
+  // Divider,
   Typography,
   makeStyles
 } from '@material-ui/core';
@@ -27,7 +27,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const Profile = ({user, className, ...rest }) => {
+const Profile = ({ user, className, ...rest }) => {
   const classes = useStyles();
 
   return (
